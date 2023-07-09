@@ -1,0 +1,48 @@
+/* Home.css */
+
+#root {
+  width: 80%; /* Set the width to 80% */
+  height: 80%; /* Set the height to 80% */
+  margin: auto; /* Center it on the screen */
+}
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  /* assume the height of the header is 60px */
+  height: 60px;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.sidebar {
+  width: 20%;
+  position: sticky;
+  left: 0;
+  /* adjust top position to header's height plus a little more for visual offset  */
+  top: 70px;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  /* Added padding-top equivalent to the height of the header */
+  padding-top: 20px;
+}
+
+.trusttrail {
+  flex-grow: 1;
+}
+
+.textpage p {
+  color: rgb(41, 11, 108);
+}

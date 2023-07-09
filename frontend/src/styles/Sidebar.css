@@ -1,0 +1,27 @@
+.sidebar {
+    background-color: #6FAED9; /* darker blue */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    overflow: auto;
+  }
+  
+  .sidebar h3 {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .sidebar ul li:hover {
+    color: #ADD8E6; /* light blue */
+  }
+  

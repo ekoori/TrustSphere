@@ -1,0 +1,20 @@
+/* src/styles/Global.css */
+
+body {
+    background-color: #ADD8E6; /* light blue */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* make the body take up the full viewport height */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    max-width: 90vw; 
+
+}
+
+h1 {
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+

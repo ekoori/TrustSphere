@@ -1,0 +1,33 @@
+.login-form {
+    background-color: #7a9dde; /* darker blue */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .login-form h1 {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 50px;
+  }
+  
+  .login-form input[type="email"], 
+  .login-form input[type="password"], 
+  .login-form button {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+  }
+  
+  .login-form button {
+    background-color: #6FAED9; /* darker blue */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+  
+.login-form button:hover {
+  background-color: #569EC3; /* even darker blue on hover */
+}
+  
