@@ -5,8 +5,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #ADD8E6;
-    color: white;
+    background-color: #bbbbbb;
+    color: #008eff;
     width: 100%;
   }
   
@@ -24,23 +24,23 @@
   }
 
   .header nav ul li:hover { /* Add hover effect to list items */
-    background-color: #569EC3;
+    background-color: #1cb3e1;
   }
   
   .header nav ul li a {
-    color: white;
+    color: #008eff;
     text-decoration: none;
   }
   
   .header nav ul li button {
     color: white;
-    background-color: #6FAED9; /* darker blue */
+    background-color: #008eff; /* darker blue */
     border: none;
     cursor: pointer;
     padding: 10px 20px;
   }
   
   .header nav ul li button:hover {
-    background-color: #569EC3; /* even darker blue on hover */
+    background-color: #1cb3e1; /* even darker blue on hover */
   }
   

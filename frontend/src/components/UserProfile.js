@@ -16,15 +16,17 @@ function UserProfile() {
   const { isLoggedIn, handleLogin, handleLogout } = useLogin();
   const [userData, setUserData] = useState(null);
   const [sessionId] = useState(localStorage.getItem('session_id'));
+  const [userId] = useState(localStorage.getItem('user_id'));
 
   useEffect(() => {
     if (sessionId) {
-      api.get('/api/user', { headers: { 'Session-ID': sessionId }}).then(response => {
-        console.log('UserProfile: ',response.data)
+      api.post('/api/user', { session_id: sessionId, user_id: userId }).then(response => {
+        console.log('UserProfile: ', response.data)
         setUserData(response.data);
       });
     }
   }, [sessionId]);
+  
  
 
   return (
@@ -34,11 +36,11 @@ function UserProfile() {
         {!isLoggedIn && <UserLogin onLogin={handleLogin} />}
         {userData && (
           <div>
-            <h1>User Profile</h1>
+            <h3>User Profile</h3>
             <ul>
-              <li>Name: {[userData[0]]}</li>
-              <li>Email: {[userData[1]]}</li>
-              <li>Location: {[userData[2]]}</li>
+              <li>Name: {[userData.name]}</li>
+              <li>Email: {[userData.email]}</li>
+              <li>Location: {[userData.location]}</li>
               <li>Session ID: {sessionId}</li>
             </ul>
           </div>

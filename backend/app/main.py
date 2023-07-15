@@ -19,6 +19,7 @@ from flask_login import LoginManager
 from routes.login import load_user, login, logout, check_session
 from routes.profile import get_user
 from routes.registration import register
+from routes.trusttrail import get_trusttrail, add_transaction
 from models.user import User
 
 app = Flask(__name__)
@@ -48,6 +49,11 @@ app.add_url_rule('/api/user', view_func=get_user, methods=['GET','POST'])
 
 #route:registration
 app.add_url_rule('/api/register', view_func=register, methods=['POST'])
+
+#route:trusttrail
+app.add_url_rule('/api/trusttrail', view_func=get_trusttrail, methods=['GET', 'POST', 'OPTIONS'])
+#app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, methods=['POST', 'OPTIONS'])
+
 
 
 if __name__ == '__main__':

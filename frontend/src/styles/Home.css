@@ -43,6 +43,11 @@
   flex-grow: 1;
 }
 
+div.transaction:hoover {
+  background-color: #7c2e2e; /* NOT WORKING?! */
+}
+
+
 .textpage p {
   color: rgb(41, 11, 108);
 }

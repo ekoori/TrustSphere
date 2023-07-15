@@ -50,8 +50,9 @@ cassandra_session = cluster.connect()
 #cassandra_session.row_factory = dict_factory
 
 class User(UserMixin):
-    def __init__(self, name, email, password, session_id):
+    def __init__(self, name, email, password, session_id, user_id):
         self.name = name
+        self.user_id = user_id
         self.email = email
         self.password = password
         self.session_id = session_id
@@ -63,6 +64,7 @@ class User(UserMixin):
     def to_dict(self):
         return {
             'name': self.name,
+            'user_id': self.user_id,
             'email': self.email,
             'password': self.password,
             'session_id': self.session_id }
@@ -74,7 +76,7 @@ class User(UserMixin):
         password = generate_password_hash(data['password'])
 
         # create the user in Cassandra
-        query = "INSERT INTO TrustSphere.users (email, name, password) VALUES (%s, %s, %s);"
+        query = "INSERT INTO TrustSphere.users (user_id, email, name, password) VALUES (uuid(), %s, %s, %s);"
         cassandra_session.execute(query, (email, name, password))
 
         return cls(name, email, password, '')
@@ -126,33 +128,36 @@ class User(UserMixin):
         return False
 
     @classmethod
-    def get(cls, email):
-        rows = cassandra_session.execute("""SELECT * FROM TrustSphere.users WHERE email = %s""", [email])
-        for user_row in rows:
-            session_rows = cassandra_session.execute("""
-                SELECT session_id FROM TrustSphere.sessions 
-                WHERE user_email = %s AND expire_at > toTimestamp(now()) 
+    def get(cls, user_id):
+        rows = cassandra_session.execute("""SELECT * FROM trustsphere.users WHERE user_id = %s""", (uuid.UUID(user_id),))
 
-                LIMIT 1 ALLOW FILTERING
-            """, [email])
-            for session_row in session_rows:
-                return cls(user_row.name, user_row.email, user_row.password, session_row.session_id)
+        for user_row in rows:
+            user = cls(
+                name=user_row.name,
+                email=user_row.email,
+                password=user_row.password,
+                session_id="",
+                user_id=user_row.user_id
+            )
+            return user
         return None
+
     
     @classmethod
-    def get_user_by_session(cls, session_id):
+    def get_user_by_session(cls, session_id, user_id):
         # get the session from Cassandra
-        query = "SELECT * FROM TrustSphere.sessions WHERE session_id = %s ALLOW FILTERING"
+        query = "SELECT * FROM TrustSphere.sessions WHERE session_id = %s and user_id = %s ALLOW FILTERING"
         print('user checking session:',session_id)
         if session_id == 'undefined':
             return False
-        rows = cassandra_session.execute(query, (uuid.UUID(session_id),))
+        rows = cassandra_session.execute(query, (uuid.UUID(session_id), uuid.UUID(user_id)))
         
         for row in rows:
             user_email = row.user_email
-            user = cls.get(user_email)
 
-            return (user.name, user.email, user.location)
+            user = cls.get(user_id)
+
+            return user
 
         return None
 
@@ -169,7 +174,7 @@ class User(UserMixin):
 
         for row in rows:
             if row:
-                user = cls(row.name, row.email, row.password, '')
+                user = cls(row.name, row.email, row.password, row.user_id, '')
                 if user.check_password(password):
                     
                     # User found and password matches, create a new session
@@ -178,16 +183,33 @@ class User(UserMixin):
                     expire_at = datetime.utcnow() + timedelta(hours=1)  # Set session to expire in 1 hour
                     creation_time = datetime.utcnow()
                     
+                    user_id = row.user_id
+                    email = row.email
+                    location = row.location
+                    name = row.name
+                    
                     # Insert the session into the sessions table
                     session_query = SimpleStatement(
-                        "INSERT INTO TrustSphere.sessions (session_id, user_email, expire_at, creation_time) VALUES (%s, %s, %s,%s)",
+                        "INSERT INTO TrustSphere.sessions (session_id, user_email, expire_at, creation_time, user_id) VALUES (%s, %s, %s, %s, %s)",
                         consistency_level=ConsistencyLevel.LOCAL_QUORUM
                     )
-                    cassandra_session.execute(session_query, (uuid_session_id, row.email, expire_at, creation_time))
+                    try:
+                        cassandra_session.execute(session_query, (uuid_session_id, row.email, expire_at, creation_time, row.user_id))
+                    except Exception as e:
+                        print("Error inserting session: ", e)
+                        session_id = ""
 
                     # Return the user with the session_id
-                    user.session_id = session_id
-                    print(session_id)
+                    user.session_id = cls.session_id = session_id
+                    user.user_id = cls.user_id = user_id
+                    user.location = cls.location = location
+                    user.name = cls.name = name
+                    
+
+
+                    print("session: ",session_id)
+                    print("user logged in: ",name, "(",user_id,")")
+                    
                     return user
 
         return None

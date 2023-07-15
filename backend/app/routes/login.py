@@ -31,10 +31,11 @@ def login():
     else:
         data = request.get_json()
         user = User.login(data)  #model:user
-        print('login.py.login: ',user.session_id)
+        print("login.py data: ", user.to_dict())
+        #print('login.py.login: ',user.session_id)
         if user:
             login_user(user)
-            return {'message': 'User logged in successfully', 'session_id': user.session_id}, 200
+            return {'message': 'User logged in successfully', 'data': user.to_dict()}, 200
         else:
             return {'message': 'Invalid email or password'}, 401
 
@@ -51,7 +52,7 @@ def logout():
         return jsonify(success=True), 200
 
 
-def check_session(): #redundant?
+def check_session(): 
     data = request.get_json()
     print(data)
     session_id = data['session_id']

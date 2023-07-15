@@ -20,11 +20,15 @@ const UserLogin = ({ onLogin }) => {
     event.preventDefault();
     try {
       const response = await api.post('/api/login', { email, password }); // Using async-await approach for cleaner code
-      localStorage.setItem('session_id', response.data.session_id);
-      onLogin();
+      console.log(response.data);
+      localStorage.setItem('session_id', response.data.data.session_id);
+      console.log('user logged in: ', response.data.data.user_id)
+      localStorage.setItem('user_id', response.data.data.user_id);
+      onLogin();      
+
       // console.log("session_id stored in local storage:", response.data.session_id);  
     } catch (error) {
-      const errorMessage = error?.response?.data?.message || 'Login failed'; // Graceful error handling
+      const errorMessage = error?.response?.data?.data?.message || 'Login failed'; // Graceful error handling
       alert(errorMessage);
     }
   };
