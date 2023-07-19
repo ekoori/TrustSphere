@@ -16,7 +16,7 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import About from './pages/About'
 import Home from './pages/Home'
 import Projects from './components/Projects'
-import UserProfile from './components/UserProfile'
+import UserProfile from './pages/UserProfile'
 import UserRegistration from './components/UserRegistration'
 import Header from './components/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';

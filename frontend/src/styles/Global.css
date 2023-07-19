@@ -1,7 +1,9 @@
 /* src/styles/Global.css */
 
 body {
-    background-color: #efefef; /* light blue */
+    /* background-color: #efefef; light blue */
+        background: linear-gradient(to bottom right, #4f4b7b, #c0c5e0);
+        background-attachment: fixed;
     display: flex;
     justify-content: center;
     align-items: center;

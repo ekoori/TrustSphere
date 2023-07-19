@@ -43,7 +43,7 @@
   flex-grow: 1;
 }
 
-div.transaction:hoover {
+.transaction:hoover {
   background-color: #7c2e2e; /* NOT WORKING?! */
 }
 

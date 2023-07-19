@@ -16,15 +16,19 @@ const Home = () => {
   const { isLoggedIn, handleLogin, handleLogout } = useLogin();
 
   return (
+
+
+    
     <div className="container"> 
-        <div className="main-content">
+        
           <Sidebar className="sidebar" onLogout={handleLogout} />
+          <div className="main-content">
           {isLoggedIn ? (
             <TrustTrail className="trusttrail" onLogout={handleLogout} />
           ) : (
             <UserLogin onLogin={handleLogin} />
           )}
-        </div>
+          </div>
     </div>
   );
 };

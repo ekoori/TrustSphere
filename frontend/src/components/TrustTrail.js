@@ -76,17 +76,18 @@ return (
             <p>Status: {transaction.transaction_status}</p>
         </div>
         <div style={{position: 'relative'}}>
-            <p style={{fontSize: '1.1em'}}>{transaction.gratitude_comment}</p>
-            <p style={{position: 'absolute', bottom: '10px', right: '10px'}}>👍 {transaction.gratitude_comment_likes}</p>
-        </div>
-        <div style={{fontSize: '0.75em', position: 'relative'}}>
-            <p>UserName: {transaction.user_comment}</p>
-            <p style={{position: 'absolute', bottom: '10px', right: '10px'}}>👍 {transaction.user_comment_likes}</p>
+            <p style={{fontSize: '1.1em', textAlign: 'justify', textJustify: 'inter-word' }}>{transaction.gratitude_comment}</p>
+            <p style={{position: 'absolute', bottom: '-15px', right: '0px'}}>1M👍 {transaction.gratitude_comment_likes}</p>
         </div>
         <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.75em', position: 'relative'}}>
-            <p>Other user: <a href={`/user/${transaction.other_user_id}`} style={{color: 'darkblue', textDecoration: 'none'}}> {transaction.other_user_name} </a></p>
-            <p>Other comment: {transaction.other_comment}</p>
-            <p style={{position: 'absolute', bottom: '10px', right: '10px'}}>👍 {transaction.other_comment_likes}</p>
+            <p style={{ textAlign: 'justify', textJustify: 'inter-word' }}><a href={`/user/${transaction.other_user_id}`} style={{color: 'darkblue', textDecoration: 'none', width: '20px'}}> {transaction.other_user_name} </a>
+            {transaction.other_comment}</p>
+            <p style={{position: 'absolute', bottom: '-5px', right: '0px'}}>50k👍 {transaction.other_comment_likes}</p>
+        </div>
+        <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.75em', position: 'relative'}}>
+            <p style={{ textAlign: 'justify', textJustify: 'inter-word' }}><a href={`/user/${transaction.other_comment_author_id}`} style={{color: 'darkblue', textDecoration: 'none', width: '20px'}}> {transaction.other_comment_author_name} </a>
+            {transaction.user_comment}</p>
+            <p style={{position: 'absolute', bottom: '-5px', right: '0px'}}>2👍 {transaction.user_comment_likes}</p>
         </div>
     </div>
 ))}
