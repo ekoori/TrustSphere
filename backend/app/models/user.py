@@ -1,40 +1,31 @@
-"""
-File: ./backend/app/models/user.py:
-Description: Model file for handling User registration, authentication, and session management operations.
-Class: User
-Properties: 
-	* name: name of the user.
-	* email: email of the user, used for authentication.
-	* password: hashed password of the user.
-	* session_id: unique id for user session.
-	* location: location of the user, default is "Heidelberg".
-Methods: 
-	[+] get_id() : returns the user's email.
-	[+] to_dict() : returns user details as dictionary.
-    [+] register(data): registers the user by inserting user's details in the database.
-  	[x] check_password(password): checks password.
-  	[+] generate_unique_session_id(): generates a unique session id for the user.
-	[+] check_session(session_id): checks if the session is active or expired.
-	[x] get(email): fetches the user with the given email from the database.
-  	[+] get_user_by_session(session_id): fetches user information by session id.
-	[x] login(data): authenticates the user and creates a new session if the password is correct.
-	[x] logout(email): ends the session of the user.
-"""
+# File: ./backend/app/models/user.py
+# Description: Model file for handling User registration, authentication, and session management operations.
+# Class: User
+# Properties:
+#   [+] name: name of the user.
+#   [+] email: email of the user, used for authentication.
+#   [+] password: hashed password of the user.
+#   [/] session_id: unique id for user session, may not be managed directly by User but implemented via session management.
+#   [+] location: location of the user, default is "Heidelberg".
+# Methods: 
+#   [+] get_id(): Returns the user's email.
+#   [+] to_dict(): Returns user details as dictionary.
+#   [+] register(data): Registers the user by inserting user's details in the database.
+#   [/] check_password(password): Checks password using hash verification (partially since actual check is done via Werkzeug security function).
+#   [+] generate_unique_session_id(): Generates a unique session id for the user.
+#   [/] check_session(session_id): Checks if the session is active or expired, includes handling session renewal.
+#   [/] get(email): Fetches the user with the given email from the database, operational but might be optimizable.
+#   [/] login(data): Authenticates the user and creates a new session if the password is correct, requires optimization and error handling improvement.
+#   [/] logout(email): Ends the session of the user, implemented but requires thorough testing to ensure complete cleanup.
+#   [/] get_user_by_session(session_id): Fetches user information by session id, partially implemented with needs for efficiency improvement.
 
-
-# Features 
-"""   
-   - Users can view and edit their profile information, including name, surname, location, and profile picture.
-   - Profile pictures should be validated for file type and size.
-   - Users can view their trust scores based on their transactions and projects.
-   - Trust scores should be calculated using factors such as transaction count, transaction duration, and user feedback.
-   - Users can view their transaction history and trust ratings received from other users.
-   - Users can view their active transactions, projects, and votings.
-"""
-
-
-
-
+# Features:
+#   - Users can view and edit their profile information, including name, surname, location, and profile picture.
+#   - Profile pictures should be validated for file type and size. (Not yet implemented in the provided methods)
+#   - Users can view their trust scores based on their transactions and projects. (Not directly available in User model but can be assumed through interaction with other models)
+#   - Trust scores should be calculated using factors such as transaction count, transaction duration, and user feedback. (Inferred feature interaction with another model)
+#   - Users can view their transaction history and trust ratings received from other users. (Depends on integration with transactional systems)
+#   - Users can view their active transactions, projects, and votings. (Assumed interaction with separate components handling these entities)
 
 from cassandra.cluster import Cluster
 from werkzeug.security import generate_password_hash, check_password_hash
