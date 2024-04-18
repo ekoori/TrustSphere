@@ -1,10 +1,6 @@
-/* Home.css */
+/* src/styles/Home.css */
 
-#root {
-  width: 80%; /* Set the width to 80% */
-  height: 80%; /* Set the height to 80% */
-  margin: auto; /* Center it on the screen */
-}
+
 
 
 .header {
@@ -12,7 +8,7 @@
   top: 0;
   z-index: 100;
   /* assume the height of the header is 60px */
-  height: 60px;
+  height: 30px;
 }
 
 .container {
@@ -22,32 +18,45 @@
 }
 
 .sidebar {
-  width: 20%;
+  width: 15%;
   position: sticky;
   left: 0;
   /* adjust top position to header's height plus a little more for visual offset  */
-  top: 70px;
-}
+  top: 10px;
+ 
+    background-color: #bd7c7c; /* darker blue */
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    overflow: auto;
+    /* width: 30px; */
+  }
 
 .main-content {
+  width: 85%;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: stretch;
   /* Added padding-top equivalent to the height of the header */
-  padding-top: 20px;
+  padding-top: 10px;
+  background-color: #527c2e; 
 }
 
 .trusttrail {
   flex-grow: 1;
+  background-color: #2e777c; 
+  width: 100%;
+  
 }
 
-.transaction:hoover {
-  background-color: #7c2e2e; /* NOT WORKING?! */
+.transaction {
+  background-color: #2a86c8; 
+
 }
 
-
-.textpage p {
-  color: rgb(41, 11, 108);
+.transaction:hover {
+  background-color: #658cc6; 
 }
+

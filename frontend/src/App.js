@@ -11,7 +11,7 @@
 //    [+] handleLogin() - Sets the isLoggedIn state to true when the user logs in.
 //    [+] handleLogout() - Sets the isLoggedIn state to false when the user logs out. 
 
-import './styles/Global.css';
+import './styles/App.css';
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import About from './pages/About'
 import Home from './pages/Home'
