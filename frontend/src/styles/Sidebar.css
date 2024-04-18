@@ -1,0 +1,28 @@
+/* src/styles/Sidebar.css */
+
+
+  
+  .sidebar h3 {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar nav ul li {
+    margin-bottom: 10px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+
+  .sidebar nav ul li a {
+    color: #008eff;
+    text-decoration: none;
+  }
+
+  .sidebar nav ul li:hover {
+    color: #1cb3e1; 
+  }

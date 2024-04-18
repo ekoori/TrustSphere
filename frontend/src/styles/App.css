@@ -1,0 +1,35 @@
+/* src/styles/Global.css */
+
+#root {
+    width: 80%; /* Set the width to 80% */
+    height: 90%; /* Set the height to 80% */
+    margin: auto; /* Center it on the screen */
+  }
+
+body {
+    /* background-color: #efefef; light blue */
+        background: linear-gradient(to bottom right, #4f4b7b, #c0c5e0);
+        background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* make the body take up the full viewport height */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    max-width: 95vw; 
+
+}
+
+h1 {
+    text-align: left;
+    margin-bottom: 50px;
+}
+
+
+
+.textpage p {
+    color: rgb(41, 11, 108);
+    text-align: justify;
+    text-justify: inter-word;
+  }
+

@@ -1,0 +1,70 @@
+# .gitignore
+
+# Node modules (for frontend)
+/frontend/node_modules/
+
+# Build files (if you have a build process that outputs to a build/ or dist/ directory)
+/frontend/build/
+/frontend/dist/
+
+# Environment variables
+/.env
+/frontend/.env
+/backend/.env
+
+# Logs
+/logs
+*.log
+npm-debug.log*
+
+# Runtime data
+/pids
+*.pid
+*.seed
+*.pid.lock
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+/build/Release
+
+# Dependency directories
+/node_modules/
+/jspm_packages/
+
+# Optional npm cache directory
+/.npm
+
+# Optional eslint cache
+/.eslintcache
+
+# Optional REPL history
+/.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variable files
+.env*
+
+# Pycharm project files
+/.idea/
+
+# Python byte-code files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code settings and extensions
+.vscode/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
