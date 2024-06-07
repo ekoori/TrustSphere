@@ -1,0 +1,53 @@
+/* src/styles/Pages.css */
+
+.page-main {
+    padding: 2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-concepts .concept,
+.contribute-concept {
+    display: flex;
+    align-items: flex-start;
+    background-color: white;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1em;
+}
+
+.concept-image {
+    width: 200px;
+    height: 200px;
+    margin-right: 1em;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.concept-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-join, .btn-github {
+    padding: 0.5em 1em;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-join:hover {
+    background-color: darkorange;
+}
+
+.paypal-button {
+    text-align: center;
+    margin-top: 1em;
+}

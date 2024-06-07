@@ -16,17 +16,27 @@ Methods:
 from flask import Flask
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_session import Session
 from routes.login import load_user, login, logout, check_session
 from routes.profile import get_user
 from routes.registration import register
-from routes.trusttrail import get_trusttrail, add_transaction
+
 from models.user import User
+
+import sys
+print("Python executable:", sys.executable)
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # Add your secret key
+app.config['SESSION_TYPE'] = 'filesystem'  
+Session(app)
+
+from routes.trusttrail import get_trusttrail, add_transaction
 
 CORS(app, resources={r"/api/*": {
-    "origins": ["http://143.42.34.42:3000","http://localhost:3000"],
+     "origins": ["*"],
+     #"origins": ["http://143.42.34.42:3000","http://localhost:3000"],
      "allow_headers": ["Content-Type"],
      "supports_credentials": True
     }})  # Enable CORS for all routes
@@ -52,9 +62,11 @@ app.add_url_rule('/api/register', view_func=register, methods=['POST'])
 
 #route:trusttrail
 app.add_url_rule('/api/trusttrail', view_func=get_trusttrail, methods=['GET', 'POST', 'OPTIONS'])
-#app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, methods=['POST', 'OPTIONS'])
+app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, methods=['POST', 'OPTIONS'])
 
 
 
 if __name__ == '__main__':
+    #register_routes(app) 
     app.run(debug=True, host="0.0.0.0")
+

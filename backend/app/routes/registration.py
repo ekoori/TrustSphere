@@ -15,8 +15,11 @@ def register():
     # Attempt to register the user
     user = User.register(data)
 
+    
+
+
     if user:
-        return jsonify({'message': 'User registered successfully.'}), 200
+        return jsonify({'reg_success':True,'message': 'User registered successfully.', 'user_id': user.user_id}), 200
     else:
         return jsonify({'message': 'Registration failed.'}), 400
 

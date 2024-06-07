@@ -11,7 +11,7 @@ import { useLogin } from '../App';
 import api from '../api';
 import UserLogin from '../components/UserLogin';
 import Sidebar from '../components/Sidebar';
-import '../styles/Home.css';
+import '../styles/Profile.css';
 
 function UserProfile() {
   const { isLoggedIn, handleLogin, handleLogout } = useLogin();

@@ -70,7 +70,18 @@ class User(UserMixin):
         query = "INSERT INTO TrustSphere.users (user_id, email, name, password) VALUES (uuid(), %s, %s, %s);"
         cassandra_session.execute(query, (email, name, password))
 
-        return cls(name, email, password, '')
+
+        # retrieve the user_id of the newly created user
+        query = "SELECT user_id FROM TrustSphere.users WHERE email = %s ALLOW FILTERING;"
+        result = cassandra_session.execute(query, (email,))
+        user_id = result.one().user_id
+
+
+
+        
+        
+
+        return cls(name, email, password, '', user_id)
 
 
 
@@ -167,7 +178,7 @@ class User(UserMixin):
             if row:
                 user = cls(row.name, row.email, row.password, row.user_id, '')
                 if user.check_password(password):
-                    
+                    print("debug>>> in model.login")
                     # User found and password matches, create a new session
                     session_id = User.generate_unique_session_id()
                     uuid_session_id = uuid.UUID(session_id)
@@ -201,7 +212,7 @@ class User(UserMixin):
                     print("session: ",session_id)
                     print("user logged in: ",name, "(",user_id,")")
                     
-                    return user
+                    return cls(name, email, password, session_id, user_id)
 
         return None
     

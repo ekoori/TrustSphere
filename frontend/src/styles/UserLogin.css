@@ -4,6 +4,7 @@
     align-items: center;
     flex-direction: column;
     gap: 20px;
+    border-radius: 8px;
   }
   
   .login-form h1 {

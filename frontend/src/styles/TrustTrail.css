@@ -1,0 +1,265 @@
+/* TrustTrail.css */
+
+.transaction {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.transaction.offer {
+    background-color: #d9f2d9;
+}
+
+.transaction.request {
+    background-color: #f2d9d9;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.transaction-header .left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-header .right {
+    flex: 0 0 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.transaction-header h3, .transaction-header small {
+    margin: 0;
+}
+
+.transaction-header small a {
+    margin-right: 1em;
+    color: #2a6592;
+    text-decoration: none;
+}
+
+.transaction-header small a:hover {
+    text-decoration: underline;
+}
+
+.like-timestamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.description-container {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.transaction-image {
+    width: 100px;
+    height: auto;
+    margin-right: 1em;
+}
+
+.description {
+    flex: 1;
+    align-self: flex-start;
+    margin: 0;
+}
+
+.project-link {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.project-link a {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2a6592;
+    color: #2a6592;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+    height: 100%;
+    align-self: flex-start;
+    box-sizing: border-box;
+}
+
+.project-link a:hover {
+    background-color: #2a6592;
+    color: white;
+}
+
+.project-link a.disabled {
+    color: gray;
+    border-color: gray;
+}
+
+.participants {
+    font-style: italic;
+}
+
+.participants a {
+    color: #2a6592;
+    text-decoration: none;
+}
+
+.participants a:hover {
+    text-decoration: underline;
+}
+
+.status {
+    margin-top: 1em;
+}
+
+.progress {
+    display: flex;
+    gap: 0.5em;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9em;
+    padding: 0.2em;
+    border-radius: 4px;
+    background-color: #e6f0f5;
+    position: relative;
+}
+
+.step.completed {
+    background-color: #2a6592;
+    color: white;
+}
+
+.step.in-progress {
+    background-color: orange;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.step.in-progress:hover {
+    background-color: #e67e22;
+}
+
+.step.disabled {
+    background-color: gray;
+    color: white;
+}
+
+.step .comment {
+    font-size: 0.8em;
+    color: #fff;
+    margin-top: 0.2em;
+}
+
+.comment {
+    margin-top: 1em;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.trustifact-image {
+    width: 50px;
+    height: auto;
+    float: left;
+    margin-right: 1em;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.shoutout {
+    background-color: #d9d9f2;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shoutout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.shoutout-text {
+    margin-top: 1em;
+    font-size: 0.9em;
+}
+
+.selector-buttons {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+
+.btn-selector {
+    flex: 1;
+    padding: 0.5em;
+    background-color: #ccc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-selector.active {
+    background-color: #2a6592;
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Add this to TrustTrail.css */
+#shoutout-entry, #trustifact-entry {
+    margin-top: 1em;
+}
+
+#shoutout-text, #trustifact-text {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#save-shoutout-btn, #save-trustifact-btn {
+    margin-top: 0.5em;
+}
+
+

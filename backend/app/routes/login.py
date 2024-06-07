@@ -27,12 +27,15 @@ def login():
         response.headers.add('Access-Control-Allow-Origin', 'http://143.42.34.42:3000')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        print("debug>>> in login route - options")
         return response, 200
+        
     else:
         data = request.get_json()
         user = User.login(data)  #model:user
-        print("login.py data: ", user.to_dict())
-        #print('login.py.login: ',user.session_id)
+        print("debug>>> in login route - get")
+        #print("login.py data: ", user.to_dict())
+        print('login.py.login: ', user.session_id)
         if user:
             login_user(user)
             return {'message': 'User logged in successfully', 'data': user.to_dict()}, 200
@@ -52,11 +55,17 @@ def logout():
         return jsonify(success=True), 200
 
 
+#@app.route('/api/check_session', methods=['GET'])
+@login_required
+def check_session():
+    return jsonify({"status": "active", "user_id": current_user.id}), 200
+
+"""
 def check_session(): 
     data = request.get_json()
     print(data)
     session_id = data['session_id']
     result = User.check_session(session_id) #model:user
     return {'isLoggedIn': result}
-
+"""
 

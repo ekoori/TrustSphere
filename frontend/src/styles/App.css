@@ -1,35 +1,321 @@
-/* src/styles/Global.css */
-
-#root {
-    width: 80%; /* Set the width to 80% */
-    height: 90%; /* Set the height to 80% */
-    margin: auto; /* Center it on the screen */
-  }
+/* src/styles/App.css */
 
 body {
-    /* background-color: #efefef; light blue */
-        background: linear-gradient(to bottom right, #4f4b7b, #c0c5e0);
-        background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    
+    background: linear-gradient(to bottom right, #e6f0f5, #a6abc7);
+}
+
+header {
+    background-color: #2a6592;
+    color: white;
+    padding: .2em 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.logo {
+    margin-right: auto;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+nav {
+    flex-grow: 1;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.notification-panel {
+    position: absolute;
+    top: 30px;
+
+    background-color: white;
+    color: black;
+    width: 400px;
+    max-height: 500px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1em;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.notification-panel h4 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+}
+
+.notification-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+}
+
+.notification-list li img.notification-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.5em;
+}
+
+.notification-list li a {
+    flex-grow: 1;
+    text-decoration: none;
+    color: #2a6592;
+}
+
+.notification-list li a:hover {
+    text-decoration: underline;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.container {
+    display: flex;
+    margin: 5em 2em 2em 2em;
+    justify-content: center;
+}
+
+aside {
+    max-width: 20%;
+    min-width: 100px;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 8px;
+    flex: 1;
+}
+
+main {
+    width: 75%;
+    min-width: 600px;
+    max-width: 900px;
+    margin-left: 2em;
+    flex:1;
+}
+
+aside h3 {
+    margin-top: 0;
+}
+
+aside .btn-orange {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 1em;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+aside .btn-purple {
+    background-color: purple;
+    color: white;
+    border: none;
+    padding: 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 1em;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+aside .search-box {
+    margin-bottom: 1em;
+}
+
+aside .search-box input {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filters button {
+    display: block;
+    width: 100%;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    background-color: #2a6592;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filters button:hover {
+    background-color: #4a7ba8;
+}
+
+.sphere-list, .active-offers, .active-requests {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sphere-list li, .active-offers li, .active-requests li {
+    margin: 0.5em 0;
+}
+
+.sphere-list a, .active-offers a, .active-requests a {
+    text-decoration: none;
+    color: #2a6592;
+    display: block;
+    padding: 0.5em;
+    border-radius: 4px;
+    background-color: #e6f0f5;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sphere-list a:hover, .active-offers a:hover, .active-requests a:hover {
+    background-color: #2a6592;
+    color: white;
+}
+
+footer {
+    background-color: #2a6592;
+    color: white;
+    padding: .5em 0em;
+    text-align: center;
+}
+
+footer ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+footer ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.like-btn-disabled {
+    cursor: pointer;
+    color: gray;
+}
+
+.like-btn.clicked {
+    color: red;
+    cursor: default;
+}
+
+.likes-count {
+    font-size: 0.8em;
+}
+
+.time {
+    font-size: 0.7em;
+    color: #5a5a5a;
+}
+
+.white {
+    color: #ffffff;
+}
+
+.hidden {
+    display: none;
+}
+
+.highlight {
+    border: 2px solid orange;
+    animation: highlightFade 2s ease-in-out;
+}
+
+@keyframes highlightFade {
+    from { border-color: orange; }
+    to { border-color: transparent; }
+}
+
+.sphere-banner {
+    width: 100%;
+    height: 200px;
+    background-color: #e6f0f5;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* make the body take up the full viewport height */
-    margin: 0;
-    font-family: Arial, sans-serif;
-    max-width: 95vw; 
-
+    margin-bottom: 2em;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
-h1 {
-    text-align: left;
-    margin-bottom: 50px;
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
+.set-image-btn {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
 
+.sphere-banner:hover .set-image-btn {
+    opacity: 1;
+}
 
-.textpage p {
-    color: rgb(41, 11, 108);
-    text-align: justify;
-    text-justify: inter-word;
-  }
-
+.set-image-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+}

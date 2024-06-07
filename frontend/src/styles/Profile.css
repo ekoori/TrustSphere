@@ -1,0 +1,125 @@
+/* src/styles/Profile.css */
+
+.profile-section {
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    margin-bottom: 2em;
+}
+
+.profile-header h2 {
+    margin: 0;
+}
+
+.profile-sidebar {
+    width: 100%;
+    min-width: 100px;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-image {
+    width: 100%;
+    border-radius: 50%;
+    margin-bottom: 1em;
+}
+
+.profile-info h2 {
+    margin: 0.5em 0;
+}
+
+.profile-info p {
+    margin: 0.5em 0;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"] {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-orange {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.btn-orange:hover {
+    background-color: darkorange;
+}
+
+.profile-spheres,
+.profile-unions,
+.profile-projects {
+    margin-top: 2em;
+}
+
+.sphere-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sphere-list li {
+    margin: 0.5em 0;
+}
+
+.sphere-list a {
+    text-decoration: none;
+    color: #2a6592;
+    background-color: #e6f0f5;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sphere-list a:hover {
+    background-color: #cce0ff;
+    color: darkblue;
+}
+
+.profile-values {
+    margin-top: 2em;
+}
+
+.profile-values span {
+    display: inline-block;
+    background-color: #f1f1f1;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    margin-right: 0.5em;
+    font-size: 0.9em;
+}
+
+.hidden {
+    display: none;
+}
+

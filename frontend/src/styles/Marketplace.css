@@ -1,0 +1,331 @@
+/* src/styles/Marketplace.css */
+
+.transaction {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.transaction.offer {
+    background-color: #d9f2d9;
+}
+
+.transaction.request {
+    background-color: #f2d9d9;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.transaction-header .left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.transaction-header .right {
+    flex: 0 0 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.transaction-header h3, .transaction-header small {
+    margin: 0;
+}
+
+.like-timestamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.description-container {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.transaction-image {
+    width: 100px;
+    height: auto;
+    margin-right: 1em;
+}
+
+.project-link a {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2a6592;
+    color: #2a6592;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.project-link a:hover {
+    background-color: #2a6592;
+    color: white;
+}
+
+#service-form {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2em;
+}
+
+#service-form.hidden {
+    display: none;
+}
+
+#service-form h3 {
+    margin-top: 0;
+}
+
+#service-form input[type="text"], #service-form textarea, #service-form select {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#service-form button[type="submit"] {
+    margin-top: 1em;
+    padding: 0.5em;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+
+/* New class for service transactions in Offers/Requests tab */
+.service {
+    background-color: #f9f9f9;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.service.offer {
+    background-color: #d9f2d9;
+}
+
+.service.request {
+    background-color: #f2d9d9;
+}
+
+.service .transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.service .transaction-header .left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.service .transaction-header .right {
+    flex: 0 0 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.service .transaction-header h3, .service .transaction-header small {
+    margin: 0;
+}
+
+.service .like-timestamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.service .description-container {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.service .transaction-image {
+    width: 100px;
+    height: auto;
+    margin-right: 1em;
+}
+
+.service .project-link a {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2a6592;
+    color: #2a6592;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.service .project-link a:hover {
+    background-color: #2a6592;
+    color: white;
+}
+
+.service .service-transactions {
+    margin-top: 1em;
+}
+
+.service .transaction-summary {
+    margin-top: 0.5em;
+}
+
+.service .transaction-summary a {
+    text-decoration: none;
+    color: #2a6592;
+}
+
+.service .transaction-summary a:hover {
+    text-decoration: underline;
+}
+
+/* Styles for status progress */
+.status {
+    margin-top: 1em;
+}
+
+.progress {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em;
+}
+
+.step {
+    width: 30%;
+    text-align: center;
+    padding: 0.5em;
+    border-radius: 4px;
+    background-color: #e6f0f5;
+}
+
+.step.completed {
+    background-color: #2a6592;
+    color: #fff;
+}
+
+.step.in-progress {
+    background-color: #ff9800;
+    color: #fff;
+}
+
+
+
+
+
+
+
+/* Marketplace.css */
+
+.transaction {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.transaction.offer {
+    background-color: #d9f2d9;
+}
+
+.transaction.request {
+    background-color: #f2d9d9;
+}
+
+/* New service-card class for service transactions in Offers/Requests tab */
+.service-card {
+    background-color: #f9f9f9;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.service-card.offer {
+    background-color: #d9f2d9;
+}
+
+.service-card.request {
+    background-color: #f2d9d9;
+}
+
+.service-card .transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.service-card .transaction-header .left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card .transaction-header .right {
+    flex: 0 0 80px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.service-card .transaction-header h3, .service-card .transaction-header small {
+    margin: 0;
+}
+
+.service-card .description-container {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.service-card .transaction-image {
+    width: 100px;
+    height: auto;
+    margin-right: 1em;
+}
+
+.service-card .project-link a {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2a6592;
+    color: #2a6592;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.service-card .project-link a:hover {
+    background-color: #2a6592;
+    color: white;
+}

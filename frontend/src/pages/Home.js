@@ -10,7 +10,10 @@ import { useLogin } from '../App';
 import UserLogin from '../components/UserLogin';
 import Sidebar from '../components/Sidebar';
 import TrustTrail from '../components/TrustTrail';
-import '../styles/Home.css';
+import '../styles/App.css';
+import '../styles/Marketplace.css';
+import '../styles/TrustTrail.css';
+
 
 const Home = () => {
   const { isLoggedIn, handleLogin, handleLogout } = useLogin();
@@ -19,7 +22,7 @@ const Home = () => {
 
 
     
-    <div className="container"> 
+    <main className="container"> 
         
           <Sidebar className="sidebar" onLogout={handleLogout} />
           <div className="main-content">
@@ -29,7 +32,7 @@ const Home = () => {
             <UserLogin onLogin={handleLogin} />
           )}
           </div>
-    </div>
+    </main>
   );
 };
 
