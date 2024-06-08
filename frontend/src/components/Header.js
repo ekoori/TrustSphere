@@ -47,13 +47,13 @@ const Header = () => {
                   </div>
               </li>
               <li><a href="/marketplace">Marketplace</a></li>
-              <li><a href="spheres.html">Spheres</a></li>
-              <li><a href="unions.html">Unions</a></li>
-              <li><a href="projects.html">Projects</a></li>
-              <li><a href="profile.html">Profile</a></li>
-              <li><a href="settings.html">Settings</a></li>
-              <li><a href="admin.html">Admin</a></li>
-              <li><a href="donate.html">Donate 💰</a></li>
+              <li><a href="/spheres">Spheres</a></li>
+              <li><a href="/unions">Unions</a></li>
+              <li><a href="/projects">Projects</a></li>
+              <li><a href="/profile">Profile</a></li>
+              <li><a href="/settings">Settings</a></li>
+              <li><a href="/admin">Admin</a></li>
+              <li><a href="/donate">Donate 💰</a></li>
               <li>
       <Link to="/profile">Profile</Link>
     </li>

@@ -27,41 +27,22 @@ import ServiceCard from './ServiceCard';
  * @returns JSX elements
  */
 
-function Marketplace() {
+function Marketplace({newServiceVisible}) {
     const [isFormVisible, setIsFormVisible] = useState(false);
+
+    useEffect(() => {
+        setIsFormVisible(newServiceVisible);
+    }, [newServiceVisible]);
+
     const toggleFormVisibility = () => {
         setIsFormVisible(!isFormVisible);
       };
+      
    // const { isLoggedIn, handleLogout } = useLogin(); // Get handleLogout from useLogin hook instead of defining it locally
     
     return (
-<div className="container">
-<aside>
-
-    <button className="btn-orange" onClick={toggleFormVisibility}>
-        {isFormVisible ? 'Hide New Service Form' : 'New Service'}
-      </button>
-
-
-
-    <div className="search-box">
-        <input type="text" placeholder="Search..." />
-    </div>
-    <div className="filters">
-        <button>Show All</button>
-        <button>Filter by Sphere</button>
-        <button>Your Contacts</button>
-        <button>My Offers/Requests</button>
-        <button>Offers</button>
-        <button>Requests</button>
-        <button>Active</button>
-        <button>Completed</button>
-    </div>
-</aside>
-
 <main>
-
-<ServiceForm isVisible={isFormVisible} />
+    <ServiceForm isVisible={isFormVisible} />
 
     <section className="marketplace">
         <ServiceCard type="request" title="Requesting Graphic Design Services" description="ha ha ha" project="none really" spheres={["sphere1"]} imageUrl="static/garden_old.webp" />
@@ -133,7 +114,6 @@ function Marketplace() {
         </div>
     </section>
 </main>
-</div>
 
 
 );

@@ -55,12 +55,12 @@ function ServiceCard({ type, title, description, project, spheres, imageUrl }) {
 }
 
 ServiceCard.propTypes = {
-  type: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  type:        PropTypes.string.isRequired,
+  title:       PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  project: PropTypes.string,
-  spheres: PropTypes.arrayOf(PropTypes.string),
-  imageUrl: PropTypes.string
+  project:     PropTypes.string,
+  spheres:     PropTypes.arrayOf(PropTypes.string),
+  imageUrl:    PropTypes.string
 };
 
 export default ServiceCard;

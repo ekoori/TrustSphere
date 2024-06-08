@@ -22,11 +22,17 @@ import UserProfile from './pages/UserProfile';
 import UserRegistration from './components/UserRegistration';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Marketplace from './components/Marketplace';
+import MarketplacePage from './components/MarketplacePage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import api from './api';
 import ErrorBoundary from './components/ErrorBoundary';
 import UserLogin from './components/UserLogin';
+import NotFound from './components/NotFound';
+import AdminPage from './components/AdminPage';
+import Contribute from './pages/Contribute';
+import Donate from './pages/Donate';
+import Privacy from './pages/Privacy';
+import TOS from './pages/TOS';
 
 // Create a context for the logged-in state
 const LoginContext = createContext();
@@ -146,12 +152,17 @@ function App() {
                         <Route path="/projects" element={<Projects/>}/>
                         <Route path="/marketplace" element={
                                           <ErrorBoundary>
-                                          <Marketplace />
+                                          <MarketplacePage />
                                           </ErrorBoundary>
                         }/>
-                        <Route path="/register" element={<UserRegistration/>}/>
+                        <Route path="/contribute" element={<div className='container'><Contribute/></div>}/>
+                        <Route path="/donate" element={<div className='container'><Donate/></div>}/>
+                        <Route path="/privacy" element={<div className='container'><Privacy/></div>}/>
+                        <Route path="/tos" element={<div className='container'><TOS/></div>}/>
+                        <Route path="/admin" element={<div className='container'><AdminPage/></div>}/>
+                        <Route path="/register" element={<div className='container'><UserRegistration/></div>}/>
                         <Route path="/login" element={<div className='container'><UserLogin/></div>}/>
-                        <Route path="*" element={<div>404 Not Found</div>} />
+                        <Route path="*" element={<div className='container'><NotFound/></div>} />
                     </Routes>
                     <Footer className='footer'/>
                 </div>

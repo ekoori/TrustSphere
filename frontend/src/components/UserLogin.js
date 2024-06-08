@@ -8,6 +8,7 @@
 
 import React, { useState } from 'react';
 import api from '../api';
+import '../styles/App.css'; 
 import '../styles/UserLogin.css'; 
 import { Link } from 'react-router-dom';
 

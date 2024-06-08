@@ -11,44 +11,45 @@
 //      [-] Users can view their history of transactions and the corresponding trust ratings received.
 //      [-] Users can receive trust/gratitude entries from other users in the form of textual comments.
 //      [-] Users can post trust/gratitude entries to other users' transactions.
-import React, { useState, useEffect } from 'react';
-import { useLogin } from '../App';
-import api from '../api';
 
-const TrustTrail = () => {
-    const [transactionHistory, setTransactionHistory] = useState([]);
-    const [error, setError] = useState(null);
-    const { isLoggedIn, userId } = useLogin();
 
-    useEffect(() => {
-        if (!userId) return; // Ensure user ID is available
-        // Using GET request and proper error handling
-        api.get(`/api/trusttrail`, { withCredentials: true }) // Ensure credentials are sent
-            .then(response => {
-                setTransactionHistory(response.data || []);
-                setError(null);
-            })
-        .catch(error => {
-            const errorMsg = error.response?.status === 404
-                ? 'Transaction history not found'
-                : 'Error fetching transaction history';
-            setError(errorMsg);
-        });
-    }, [userId]);
+import React from 'react';
+import PropTypes from 'prop-types';
+import TransactionCard from './TransactionCard';
+import '../styles/TrustTrail.css';
 
-    if (!isLoggedIn) {
-        return <div className='trusttrail'><h1>Error loading TrustTrail: User not logged in</h1></div>;
-    }
-
+function TrustTrail({ transactions }) {
     return (
-        <div className='trusttrail'>
-            {error ? <p>{error}</p> : transactionHistory.map((transaction, index) => (
-                <div className="transaction" key={index}>
-                    {/* Transaction rendering logic */}
-                </div>
+        <section id="trusttrail" className="user-trusttrail">
+            {transactions.map(transaction => (
+                <TransactionCard
+                    key={transaction.id}
+                    type={transaction.type}
+                    title={transaction.title}
+                    sphere={transaction.sphere}
+                    participants={transaction.participants}
+                    description={transaction.description}
+                    project={transaction.project}
+                    imageUrl={transaction.imageUrl}
+                    time={transaction.time}
+                />
             ))}
-        </div>
+        </section>
     );
+}
+
+TrustTrail.propTypes = {
+    transactions: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        sphere: PropTypes.string.isRequired,
+        participants: PropTypes.arrayOf(PropTypes.string).isRequired,
+        description: PropTypes.string.isRequired,
+        project: PropTypes.string,
+        imageUrl: PropTypes.string,
+        time: PropTypes.string.isRequired
+    })).isRequired
 };
 
 export default TrustTrail;

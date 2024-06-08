@@ -21,9 +21,9 @@ const Footer = () => {
       <footer>
         <ul>
             <li><a href="/about">About TrustSphere</a></li>
-            <li><a href="contribute.html">Contribute</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="tos.html">Terms of Service</a></li>
+            <li><a href="/contribute">Contribute</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/tos">Terms of Service</a></li>
         </ul>
       </footer>
 
