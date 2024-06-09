@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/Projects.css';
+import SphereBanner from './SphereBanner'; // Assuming SphereBanner is in the same directory
 
 const NewProjectForm = ({ isVisible, onCreateProject, onCancel }) => {
   const [name, setName] = useState('');
@@ -13,8 +14,8 @@ const NewProjectForm = ({ isVisible, onCreateProject, onCancel }) => {
     onCreateProject({ name, description, valueGraph, location, image });
   };
 
-  const handleImageChange = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
+  const handleImageChange = (imageFile) => {
+    setImage(imageFile);
   };
 
   if (!isVisible) return null;
@@ -23,11 +24,7 @@ const NewProjectForm = ({ isVisible, onCreateProject, onCancel }) => {
     <div id="project-form" className="transaction">
       <h3>Create a New Project</h3>
       <form onSubmit={handleSubmit}>
-        <div className="project-banner">
-          <label htmlFor="project-image" className="set-image-btn">Set image...</label>
-          <input type="file" id="project-image" name="project-image" style={{ display: 'none' }} accept="image/*" onChange={handleImageChange} />
-          {image && <img id="preview-image" src={image} alt="Image Preview" className="banner-image" />}
-        </div>
+        <SphereBanner image={image} onImageChange={handleImageChange} />
 
         <label htmlFor="project-name">Project Name:</label>
         <input type="text" id="project-name" name="project-name" value={name} onChange={(e) => setName(e.target.value)} required />
