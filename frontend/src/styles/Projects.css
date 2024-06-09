@@ -1,3 +1,289 @@
-.projects h3 {
-    color: rgb(41, 11, 108);
-  }
+/* Projects.css */
+/* Projects.css */
+
+.project {
+  background-color: #fff;
+  padding: 1em;
+  border-radius: 8px;
+  margin-bottom: 2em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.project-left {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-right {
+  flex: 0 0 120px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+}
+
+.project-header h3 {
+  margin: 0;
+}
+
+.project-owner, .project-participants {
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+.project-owner span, .project-participants span {
+  display: inline;
+  margin-right: 0.5em;
+}
+
+.project-owner a, .project-participants a {
+  display: inline;
+  color: #2a6592;
+  text-decoration: none;
+}
+
+.project-owner a:hover, .project-participants a:hover {
+  text-decoration: underline;
+}
+
+.project-description-container {
+  margin-top: 1em;
+}
+
+.project-description {
+  margin: 0;
+}
+
+.project-transactions {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.transaction {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #e6f0f5;
+  transition: background-color 0.3s;
+}
+
+.transaction:hover {
+  background-color: #cce0ff;
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.transaction h4 {
+  margin: 0;
+}
+
+.transaction-status-btn {
+  padding: 0.2em 0.5em;
+  background-color: #2a6592;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.transaction-status-btn:hover {
+  background-color: darkblue;
+}
+
+.transaction-participants {
+  font-style: italic;
+  margin-top: 0.5em;
+}
+
+.transaction-participants span {
+  display: inline;
+  margin-right: 0.5em;
+}
+
+.transaction-participants a {
+  display: inline;
+  color: #2a6592;
+  text-decoration: none;
+}
+
+.transaction-participants a:hover {
+  text-decoration: underline;
+}
+
+.project-status-buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.project-status-buttons .btn-status {
+  display: inline-block;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.project-status-buttons .btn-status-initiated {
+  background-color: lightblue;
+  color: black;
+}
+
+.project-status-buttons .btn-status-in-progress {
+  background-color: blue;
+  color: white;
+}
+
+.project-status-buttons .btn-status-completed {
+  background-color: green;
+  color: white;
+}
+
+.project-status-buttons .btn-status-trustifacted {
+  background-color: orange;
+  color: white;
+}
+
+.project-values {
+  margin-top: 1em;
+}
+
+.project-values span {
+  display: inline-block;
+  background-color: #f1f1f1;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  margin-right: 0.5em;
+  font-size: 0.9em;
+}
+
+.hr {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: none;
+  height: 1px;
+  background-color: #ccc;
+}
+
+.project-shoutouts {
+  margin-top: 1em;
+}
+
+.shoutout {
+  background-color: #d9d9f2;
+  padding: 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shoutout p {
+  margin: 0;
+}
+
+.time {
+  font-size: 0.8em;
+  color: #5a5a5a;
+}
+
+.btn-orange {
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-orange:hover {
+  background-color: darkorange;
+}
+
+/* New form styles */
+#project-form {
+  background-color: #fff;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2em;
+}
+
+#project-form.hidden {
+  display: none;
+}
+
+#project-form h3 {
+  margin-top: 0;
+}
+
+#project-form input[type="text"], #project-form textarea, #project-form select {
+  width: 100%;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.project-banner {
+  width: 100%;
+  height: 200px;
+  background-color: #e6f0f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2em;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.set-image-btn {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.project-banner:hover .set-image-btn {
+  opacity: 1;
+}
+
+.set-image-btn:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 1em;
+}

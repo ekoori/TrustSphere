@@ -33,6 +33,7 @@ import Contribute from './pages/Contribute';
 import Donate from './pages/Donate';
 import Privacy from './pages/Privacy';
 import TOS from './pages/TOS';
+import Spheres from './pages/Spheres';
 
 // Create a context for the logged-in state
 const LoginContext = createContext();
@@ -150,6 +151,7 @@ function App() {
                         <Route path="/about" element={<About/>}/>
                         <Route path="/profile" element={<UserProfile/>}/>
                         <Route path="/projects" element={<Projects/>}/>
+                        <Route path="/spheres" element={<Spheres/>}/>
                         <Route path="/marketplace" element={
                                           <ErrorBoundary>
                                           <MarketplacePage />
