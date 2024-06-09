@@ -244,6 +244,11 @@ footer ul li a {
     font-size: 1.2em;
 }
 
+.like-timestamp {
+    width: 70px;
+
+}
+
 .like-btn-disabled {
     cursor: pointer;
     color: gray;

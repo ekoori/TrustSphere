@@ -51,12 +51,6 @@
     text-decoration: underline;
 }
 
-.like-timestamp {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
 
 .description-container {
     margin-top: 1em;
@@ -69,6 +63,19 @@
     width: 100px;
     height: auto;
     margin-right: 1em;
+}
+
+.image-placeholder {
+    width: 100px;
+    height: 100px;
+    margin-right: 1em;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 0.9em;
+    border: 1px dashed #ccc;
 }
 
 .description {
@@ -167,40 +174,37 @@
     margin-top: 0.2em;
 }
 
-.comment {
-    margin-top: 1em;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-}
-
-.trustifact-image {
-    width: 50px;
-    height: auto;
-    float: left;
-    margin-right: 1em;
-}
-
 hr {
     border: none;
     border-top: 1px solid #ccc;
 }
 
-.shoutout {
-    background-color: #d9d9f2;
+.trustifact, .shoutout {
     padding: 1em;
     border-radius: 8px;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
 }
 
-.shoutout-header {
+.shoutout {
+    background-color: #d9d9f2;
+}
+
+.trustifact {
+    background-color: #d9f2d9;
+}
+
+.trustifact-header, .shoutout-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.shoutout-text {
+.trustifact-text, .shoutout-text {
     margin-top: 1em;
     font-size: 0.9em;
 }
@@ -225,30 +229,45 @@ hr {
     color: white;
 }
 
+.trustifact .left, .shoutout .left {
+    display: flex;
+    align-items: center;
 
+}
 
+.trustifact .left img, .shoutout .left img {
+    width: 100px;
+    height: auto;
+    margin-right: 1em;
+}
 
+.trustifact .right, .shoutout .right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 
+/* Editable fields */
+.transaction-header h3.editable,
+.description-container .description.editable {
+    cursor: text;
+    background-color: #f5f5f5;
+    border: 1px dashed #ccc;
+    padding: 0.2em;
+}
 
+.transaction-header h3.editable:focus,
+.description-container .description.editable:focus {
+    outline: none;
+    background-color: #fff;
+    border-color: #2a6592;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Add this to TrustTrail.css */
+/* Add and Modify buttons */
 #shoutout-entry, #trustifact-entry {
     margin-top: 1em;
+    text-align: center;
 }
 
 #shoutout-text, #trustifact-text {
@@ -260,6 +279,26 @@ hr {
 
 #save-shoutout-btn, #save-trustifact-btn {
     margin-top: 0.5em;
+    padding: 0.8em 2em;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
+#save-shoutout-btn {
+    background-color: #6a1b9a;
+}
 
+#save-shoutout-btn:hover {
+    background-color: #4a148c;
+}
+
+#save-trustifact-btn {
+    background-color: #2e7d32;
+}
+
+#save-trustifact-btn:hover {
+    background-color: #1b5e20;
+}

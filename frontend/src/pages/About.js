@@ -7,7 +7,7 @@ const About = () => {
         <div className="page-main">
         <section className="about-intro">
             <h1>About TrustSphere</h1>
-            <p>TrustSphere is a social network and gift economy platform designed to foster trust, collaboration, and mutual support among its members. Our mission is to create a community where individuals and organizations can connect, share resources, and work together towards common goals.</p>
+            <p>TrustSphere is a social platform built on principles of gift economy and liquid democracy, designed to foster trust, collaboration, and mutual support among its members. Our mission is to create a community where individuals and organizations can connect, share resources, and work together towards common goals.</p>
         </section>
         <section className="about-philosophy">
             <h2>Our Philosophy</h2>
@@ -25,23 +25,23 @@ const About = () => {
             <div className="concept">
                 <img src="static/trustifacts.png" alt="Trustifacts" className="concept-image"/>
                 <div className="concept-content">
-                    <h3>TrustiFacts</h3>
-                    <p>TrustiFacts are records of transactions and interactions between members. They serve as a testament to the trustworthiness and reliability of members within the community. By building a positive history of trustifacts, members can enhance their reputation and build stronger relationships.</p>
+                    <h3>TrustTrail and TrustiFacts</h3>
+                    <p>TrustTrail is a ledger made out of TrustiFacts and shoutouts. TrustiFacts (trust artefacts) are records of transactions and interactions between members. They serve as a testament to the trustworthiness and reliability of members within the community. By building a positive history of TrustiFacts, members can enhance their reputation and build stronger relationships.</p>
                 </div>
             </div>
             <div className="concept">
                 <img src="static/social_network.png" alt="Social Network" className="concept-image"/>
                 <div className="concept-content">
-                    <h3>Social Network</h3>
-                    <p>TrustSphere functions as a social network where members can create profiles, join spheres (groups with common interests), and participate in projects. This allows for seamless collaboration and communication within the community.</p>
+                    <h3>Social Network and Value Graphs</h3>
+                    <p>TrustSphere functions as a social network where members can create profiles, join spheres or unions (groups with common interests and values), and participate in projects. This allows for seamless collaboration and communication within the community.</p>
                 </div>
             </div>
 
             <div className="concept">
                 <img src="static/projects_spheres.png" alt="Projects and Spheres" className="concept-image"/>
                 <div className="concept-content">
-                    <h3>Projects and Spheres</h3>
-                    <p>Projects are collaborative efforts where members can contribute their skills and resources towards a common goal. Spheres are groups of members with shared interests or objectives. Together, projects and spheres form the backbone of collaboration within TrustSphere.</p>
+                    <h3>Projects, Unions, and Spheres</h3>
+                    <p>Projects are collaborative efforts where members can contribute their skills and resources towards a common goal. Unions and Spheres are groups of members with shared interests, values, or objectives. Unions have rules decided by their members, while Spheres represents a broader community which might consist of individual users, unions, and projects that share common values or geographic ties. Together, projects, unions and spheres form the backbone of collaboration within TrustSphere.</p>
                 </div>
             </div>
             <div className="concept">

@@ -41,7 +41,7 @@ function Marketplace({newServiceVisible}) {
    // const { isLoggedIn, handleLogout } = useLogin(); // Get handleLogout from useLogin hook instead of defining it locally
     
     return (
-<main>
+<div>
     <ServiceForm isVisible={isFormVisible} />
 
     <section className="marketplace">
@@ -113,7 +113,7 @@ function Marketplace({newServiceVisible}) {
             </div>
         </div>
     </section>
-</main>
+</div>
 
 
 );
