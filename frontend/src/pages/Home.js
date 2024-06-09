@@ -145,19 +145,37 @@ function Home() {
 
     const services = [
         {
-          id: 'offer-cpus',
+          id: 'service-ai-consulting',
+          type: 'offer',
           sphere: 'AI Development Sphere',
           title: 'Offering AI Consulting Services',
-          provider: 'You',
-          description: 'Elon is offering his expertise in AI consulting...',
-          projectLink: 'Project not assigned',
+          provider: 'Elon Musk',
+          description: 'Elon is offering his expertise in AI consulting to help innovative projects reach their full potential. His deep knowledge and experience in AI development can provide valuable insights and guidance for your next big project.',
+          project: 'Project not assigned',
+          imageUrl: 'static/garden_old.webp',
+          time: '2d ago',
           status: 'Posted',
           likesCount: 20,
           likedByCurrentUser: false,
-          relatedTransactions: ['transaction-cpus'],
-          timestamp: '2d ago'
+          relatedTransactions: ['Requesting 7 H100 CPUs - involving Jansen Huang - Initiated 30 min ago'],
+          canModify: true
         },
-        // Add other services here
+        {
+          id: 'service-garden-fences',
+          type: 'offer',
+          sphere: 'Community Garden Sphere',
+          title: 'Building garden fences',
+          provider: 'Sam',
+          description: 'I am offering my services to build garden fences. With extensive experience in carpentry and landscaping, I can provide sturdy and aesthetically pleasing fences for your garden.',
+          project: 'Project not assigned',
+          imageUrl: '',
+          time: '15 min ago',
+          status: 'Posted',
+          likesCount: 10,
+          likedByCurrentUser: false,
+          relatedTransactions: ['Rebuilding fence on the garden - involving Jane Doe - Initiated 15 min ago'],
+          canModify: true
+        }
       ];
 
     return (
@@ -182,7 +200,7 @@ function Home() {
                     <button className={`btn-selector ${activeTab === 'offers-requests' ? 'active' : ''}`} onClick={() => toggleTab('offers-requests')}>Offers/Requests</button>
                 </div>
                 {activeTab === 'trusttrail' && <TrustTrail transactions={transactions} />}
-                {activeTab === 'offers-requests' && <Marketplace newServiceVisible={isFormVisible}/>}
+                {activeTab === 'offers-requests' && <Marketplace services={services} newServiceVisible={isFormVisible}/>}
             </main>
         </div>
     );

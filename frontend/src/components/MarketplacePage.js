@@ -35,6 +35,45 @@ function MarketplacePage() {
       };
    // const { isLoggedIn, handleLogout } = useLogin(); // Get handleLogout from useLogin hook instead of defining it locally
     
+
+   const services = [
+    {
+      id: 'service-graphic-design',
+      type: 'offer',
+      sphere: 'Heidelberg Community Sphere | AI Australia Sphere',
+      title: 'Offering Graphic Design Services',
+      provider: 'You, John Doe',
+      description: 'I am offering my services as a graphic designer for any community project. I specialize in creating modern and sleek designs for both web and print media.',
+      project: 'Project not assigned',
+      imageUrl: '',
+      time: '2h ago',
+      status: 'Posted',
+      likesCount: 15,
+      likedByCurrentUser: false,
+      relatedTransactions: [],
+      canModify: true
+    },
+    {
+      id: 'service-h100-cpus',
+      type: 'request',
+      sphere: 'OpenAI Sphere',
+      title: 'Requesting 7 H100 CPUs for OpenAI datacentre from Jansen Huang',
+      provider: 'You, Jansen Huang',
+      description: 'This transaction involves requesting 7 H100 CPUs for the OpenAI datacentre.',
+      project: 'Project not assigned',
+      imageUrl: 'static/h100_cpus.webp',
+      time: '30 min ago',
+      status: 'Posted',
+      likesCount: 0,
+      likedByCurrentUser: false,
+      relatedTransactions: [],
+      canModify: true
+    }
+  ];
+  
+
+
+
     return (
 <div className="container">
 <aside>
@@ -59,9 +98,9 @@ function MarketplacePage() {
         <button>Completed</button>
     </div>
 </aside>
-
-<Marketplace newServiceVisible={isFormVisible}/>
-
+<main>
+<Marketplace services={services} newServiceVisible={isFormVisible}/>
+</main>
 </div>
 
 
