@@ -1,0 +1,134 @@
+/* User.css */
+
+.user-profile {
+    background-color: #fff;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2em;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1em;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.user-info h2 {
+    margin: 0;
+}
+
+.user-bio {
+    font-size: 14px;
+    color: #666;
+    margin: 0.5em 0;
+}
+
+.interaction-buttons {
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.interaction-buttons button {
+    padding: 0.5em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    width: 100%;
+}
+
+.btn-blue {
+    background-color: #2a6592;
+}
+
+.btn-purple {
+    background-color: purple;
+}
+
+.user-trusttrail {
+    margin-top: 2em;
+}
+
+/* New styles for Shoutout and TrustiFact editing */
+.hidden {
+    display: none;
+}
+
+#shoutout-entry, #trustifact-entry {
+    margin-top: 1em;
+    background-color: purple;
+    padding: 1em;
+    border-radius: 8px;
+}
+
+#shoutout-text, #trustifact-text {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#save-shoutout-btn, #save-trustifact-btn {
+    margin-top: 0.5em;
+    padding: 0.5em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    width: 100%;
+}
+
+/* Sphere list styles */
+.sphere-list {
+    list-style: none;
+    padding: 0;
+}
+
+.sphere-list li {
+    margin-bottom: 10px;
+}
+
+.sphere-list a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.sphere-list a:hover {
+    text-decoration: underline;
+}
+
+/* Styles for the service transactions */
+.service-transactions {
+    margin-top: 1em;
+}
+
+.transaction-summary {
+    margin-top: 0.5em;
+}
+
+.transaction-summary a {
+    text-decoration: none;
+    color: #2a6592;
+}
+
+.transaction-summary a:hover {
+    text-decoration: underline;
+}

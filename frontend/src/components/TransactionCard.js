@@ -46,7 +46,7 @@ function TransactionCard({
         <div className={`transaction ${type}`} >
             <div className="transaction-header">
                 <div className="left">
-                    <small><a href="sphere.html" onClick={(e) => e.stopPropagation()}>{sphere}</a></small>
+                    <small><a href="/sphere" onClick={(e) => e.stopPropagation()}>{sphere}</a></small>
                     <h3
                         contentEditable={canModify}
                         suppressContentEditableWarning={true}
@@ -58,7 +58,7 @@ function TransactionCard({
                     </h3>
                     <div className="participants">
                         {participants.map((participant, index) => (
-                            <span key={index}>👤 <a href="profile.html" onClick={(e) => e.stopPropagation()}>{participant}</a>{index < participants.length - 1 ? ', ' : ''}</span>
+                            <span key={index}>👤 <a href="/user" onClick={(e) => e.stopPropagation()}>{participant}</a>{index < participants.length - 1 ? ', ' : ''}</span>
                         ))}
                     </div>
                     {originService && (

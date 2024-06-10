@@ -37,7 +37,7 @@ function ServiceCard({
         <div className={`service ${type}`} >
             <div className="transaction-header">
                 <div className="left">
-                    <small><a href="sphere.html" onClick={(e) => e.stopPropagation()}>{sphere}</a></small>
+                    <small><a href="/sphere" onClick={(e) => e.stopPropagation()}>{sphere}</a></small>
                     <h3
                         contentEditable={canModify}
                         suppressContentEditableWarning={true}
@@ -48,7 +48,7 @@ function ServiceCard({
                         {editableTitle}
                     </h3>
                     <div className="participants">
-                        <span>👤 <a href="profile.html" onClick={(e) => e.stopPropagation()}>{provider}</a></span>
+                        <span>👤 <a href="/user" onClick={(e) => e.stopPropagation()}>{provider}</a></span>
                     </div>
                 </div>
                 <div className="right">

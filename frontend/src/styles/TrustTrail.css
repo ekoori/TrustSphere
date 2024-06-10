@@ -179,7 +179,7 @@ hr {
     border-top: 1px solid #ccc;
 }
 
-.trustifact, .shoutout {
+.trustifact, .shoutout-card {
     padding: 1em;
     border-radius: 8px;
     margin-bottom: 1em;
@@ -190,7 +190,7 @@ hr {
   flex-direction: row;
 }
 
-.shoutout {
+.shoutout-card {
     background-color: #d9d9f2;
 }
 
@@ -229,19 +229,19 @@ hr {
     color: white;
 }
 
-.trustifact .left, .shoutout .left {
+.trustifact .left, .shoutout-card .left {
     display: flex;
     align-items: center;
 
 }
 
-.trustifact .left img, .shoutout .left img {
+.trustifact .left img, .shoutout-card .left img {
     width: 100px;
     height: auto;
     margin-right: 1em;
 }
 
-.trustifact .right, .shoutout .right {
+.trustifact .right, .shoutout-card .right {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -18,7 +18,6 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import About from './pages/About';
 import Home from './pages/Home';
 import Projects from './components/Projects';
-import UserProfile from './pages/UserProfile';
 import UserRegistration from './components/UserRegistration';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -29,12 +28,18 @@ import ErrorBoundary from './components/ErrorBoundary';
 import UserLogin from './components/UserLogin';
 import NotFound from './components/NotFound';
 import AdminPage from './components/AdminPage';
+import User from './components/User';
 import Contribute from './pages/Contribute';
 import Donate from './pages/Donate';
 import Privacy from './pages/Privacy';
 import TOS from './pages/TOS';
 import Spheres from './pages/Spheres';
 import Unions from './pages/Unions';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/Settings';
+//import UserProfile from './pages/UserProfile';
+
+
 
 // Create a context for the logged-in state
 const LoginContext = createContext();
@@ -150,7 +155,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/about" element={<About/>}/>
-                        <Route path="/profile" element={<UserProfile/>}/>
+                        <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/projects" element={<Projects/>}/>
                         <Route path="/spheres" element={<Spheres/>}/>
                         <Route path="/unions" element={<Unions/>}/>
@@ -164,6 +169,8 @@ function App() {
                         <Route path="/privacy" element={<div className='container'><Privacy/></div>}/>
                         <Route path="/tos" element={<div className='container'><TOS/></div>}/>
                         <Route path="/admin" element={<div className='container'><AdminPage/></div>}/>
+                        <Route path="/settings" element={<SettingsPage/>}/>
+                        <Route path="/user" element={<User/>}/>
                         <Route path="/register" element={<div className='container'><UserRegistration/></div>}/>
                         <Route path="/login" element={<div className='container'><UserLogin/></div>}/>
                         <Route path="*" element={<div className='container'><NotFound/></div>} />

@@ -12,58 +12,65 @@
 //      [-] Users can receive trust/gratitude entries from other users in the form of textual comments.
 //      [-] Users can post trust/gratitude entries to other users' transactions.
 
+
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import TransactionCard from './TransactionCard';
+import ShoutoutCard from './ShoutoutCard';
 import '../styles/TrustTrail.css';
 
-function TrustTrail({ transactions }) {
+function TrustTrail({ items }) {
     return (
         <section id="trusttrail" className="user-trusttrail">
-            {transactions.map(transaction => (
-                <TransactionCard
-                    key={transaction.id}
-                    type={transaction.type}
-                    title={transaction.title}
-                    sphere={transaction.sphere}
-                    participants={transaction.participants}
-                    description={transaction.description}
-                    project={transaction.project}
-                    imageUrl={transaction.imageUrl}
-                    time={transaction.time}
-                    status={transaction.status}
-                    likesCount={transaction.likesCount}
-                    likedByCurrentUser={transaction.likedByCurrentUser}
-                    originService={transaction.originService}
-                    initiatedTime={transaction.initiatedTime}
-                    inProgressTime={transaction.inProgressTime}
-                    finishedTime={transaction.finishedTime}
-                    trustifactedTime={transaction.trustifactedTime}
-                    additionalCommentsTime={transaction.additionalCommentsTime}
-                    trustifacts={transaction.trustifacts}
-                    shoutouts={transaction.shoutouts}
-                    onAddTrustifact={transaction.onAddTrustifact}
-                    onAddShoutout={transaction.onAddShoutout}
-                    onModifyTransaction={transaction.onModifyTransaction}
-                    canModify={transaction.canModify}
-                />
+            {items.map(item => (
+                item.type === 'shoutout' ? (
+                    <ShoutoutCard key={item.id} shoutout={item} />
+                ) : (
+                    <TransactionCard
+                        key={item.id}
+                        type={item.type}
+                        title={item.title}
+                        sphere={item.sphere}
+                        participants={item.participants}
+                        description={item.description}
+                        project={item.project}
+                        imageUrl={item.imageUrl}
+                        time={item.time}
+                        status={item.status}
+                        likesCount={item.likesCount}
+                        likedByCurrentUser={item.likedByCurrentUser}
+                        originService={item.originService}
+                        initiatedTime={item.initiatedTime}
+                        inProgressTime={item.inProgressTime}
+                        finishedTime={item.finishedTime}
+                        trustifactedTime={item.trustifactedTime}
+                        additionalCommentsTime={item.additionalCommentsTime}
+                        trustifacts={item.trustifacts}
+                        shoutouts={item.shoutouts}
+                        onAddTrustifact={item.onAddTrustifact}
+                        onAddShoutout={item.onAddShoutout}
+                        onModifyTransaction={item.onModifyTransaction}
+                        canModify={item.canModify}
+                    />
+                )
             ))}
         </section>
     );
 }
 
 TrustTrail.propTypes = {
-    transactions: PropTypes.arrayOf(PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        sphere: PropTypes.string.isRequired,
-        participants: PropTypes.arrayOf(PropTypes.string).isRequired,
-        description: PropTypes.string.isRequired,
+        title: PropTypes.string,
+        sphere: PropTypes.string,
+        participants: PropTypes.arrayOf(PropTypes.string),
+        description: PropTypes.string,
         project: PropTypes.string,
         imageUrl: PropTypes.string,
         time: PropTypes.string.isRequired,
-        status: PropTypes.string.isRequired,
+        status: PropTypes.string,
         likesCount: PropTypes.number.isRequired,
         likedByCurrentUser: PropTypes.bool.isRequired,
         originService: PropTypes.string,
@@ -87,10 +94,10 @@ TrustTrail.propTypes = {
             likesCount: PropTypes.number.isRequired,
             likedByCurrentUser: PropTypes.bool.isRequired
         })),
-        onAddTrustifact: PropTypes.func.isRequired,
-        onAddShoutout: PropTypes.func.isRequired,
-        onModifyTransaction: PropTypes.func.isRequired,
-        canModify: PropTypes.bool.isRequired
+        onAddTrustifact: PropTypes.func,
+        onAddShoutout: PropTypes.func,
+        onModifyTransaction: PropTypes.func,
+        canModify: PropTypes.bool
     })).isRequired
 };
 
