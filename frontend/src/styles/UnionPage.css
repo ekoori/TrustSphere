@@ -1,0 +1,122 @@
+/* Union.css */
+
+.union-section {
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.union-sidebar {
+    width: 20%;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.union-sidebar h2 {
+    margin: 0 0 1em 0;
+}
+
+.union-sidebar p {
+    margin: 0.5em 0;
+}
+
+.union-sidebar .btn-orange {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.union-sidebar ul {
+    margin: 0;
+    padding-left: 1.5em;
+}
+
+.union-sidebar ul li {
+    margin: 0.5em 0;
+}
+
+
+.union-description {
+    margin-bottom: 2em;
+}
+
+.union-orgchart,
+.union-members,
+.union-projects {
+    margin-bottom: 2em;
+}
+
+.orgchart-list,
+.member-list,
+.project-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.orgchart-list li,
+.member-list li,
+.project-list li {
+    margin: 0.5em 0;
+}
+
+.orgchart-list a,
+.member-list a,
+.project-list a {
+    text-decoration: none;
+    color: #2a6592;
+    background-color: #e6f0f5;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    display: block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.orgchart-list a:hover,
+.member-list a:hover,
+.project-list a:hover {
+    background-color: #cce0ff;
+    color: darkblue;
+}
+
+.union-values {
+    margin-top: 2em;
+}
+
+.union-values span {
+    display: inline-block;
+    background-color: #f1f1f1;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    margin-right: 0.5em;
+    font-size: 0.9em;
+}
+
+.status {
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    color: white;
+}
+
+.status.active {
+    background-color: green;
+}
+
+.btn-orange {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-orange:hover {
+    background-color: darkorange;
+}
+

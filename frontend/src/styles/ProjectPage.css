@@ -1,0 +1,194 @@
+/* Project.css */
+
+.project-section {
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.project-sidebar {
+    width: 20%;
+    padding: 1em;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.project-sidebar h2 {
+    margin: 0 0 1em 0;
+}
+
+.project-sidebar p {
+    margin: 0.5em 0;
+}
+
+.project-sidebar .btn-orange {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+
+.project-description {
+    margin-bottom: 2em;
+}
+
+.project-transactions {
+    margin-bottom: 2em;
+}
+
+.transaction {
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e6f0f5;
+    margin-bottom: 1em;
+    transition: background-color 0.3s;
+}
+
+.transaction:hover {
+    background-color: #cce0ff;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+
+.transaction h4 {
+    margin: 0;
+}
+
+.transaction-status-btn {
+    padding: 0.2em 0.5em;
+    background-color: #2a6592;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.transaction-status-btn:hover {
+    background-color: darkblue;
+}
+
+.transaction-participants {
+    font-style: italic;
+    margin-top: 0.5em;
+}
+
+.transaction-participants span {
+    display: inline;
+    margin-right: 0.5em;
+}
+
+.transaction-participants a {
+    display: inline;
+    color: #2a6592;
+    text-decoration: none;
+}
+
+.transaction-participants a:hover {
+    text-decoration: underline;
+}
+
+.project-values {
+    margin-bottom: 2em;
+}
+
+.project-values span {
+    display: inline-block;
+    background-color: #f1f1f1;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    margin-right: 0.5em;
+    font-size: 0.9em;
+}
+
+.project-shoutouts {
+    margin-top: 2em;
+}
+
+.shoutout {
+    background-color: #d9d9f2;
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 1em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shoutout p {
+    margin: 0;
+}
+
+.shoutout .like-timestamp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5em;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+}
+
+.like-btn:hover {
+    color: red;
+}
+
+.likes-count {
+    font-size: 0.9em;
+}
+
+.time {
+    font-size: 0.8em;
+    color: #5a5a5a;
+}
+
+.btn-orange {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-orange:hover {
+    background-color: darkorange;
+}
+
+.status {
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+    color: white;
+}
+
+.status.in-progress {
+    background-color: blue;
+}
+
+.status.completed {
+    background-color: green;
+}
+
+.status.initiated {
+    background-color: lightblue;
+}
+
+.status.trustifacted {
+    background-color: orange;
+}
+

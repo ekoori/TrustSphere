@@ -39,6 +39,10 @@ import Unions from './pages/Unions';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/Settings';
 import SphereManagement from './pages/SphereManagement';
+import UnionPage from './pages/UnionPage';
+import ProjectPage from './pages/ProjectPage';
+import UnionManagement from './pages/UnionManagement';
+import ProjectManagement from './pages/ProjectManagement';
 //import UserProfile from './pages/UserProfile';
 
 
@@ -159,10 +163,14 @@ function App() {
                         <Route path="/about" element={<About/>}/>
                         <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/projects" element={<Projects/>}/>
+                        <Route path="/project" element={<ProjectPage/>}/>
+                        <Route path="/project-management" element={<ProjectManagement/>}/>
                         <Route path="/spheres" element={<Spheres/>}/>
                         <Route path="/sphere" element={<SpherePage/>}/>
                         <Route path="/sphere-management" element={<SphereManagement/>}/>
                         <Route path="/unions" element={<Unions/>}/>
+                        <Route path="/union" element={<UnionPage/>}/>
+                        <Route path="/union-management" element={<UnionManagement/>}/>
                         <Route path="/marketplace" element={
                                           <ErrorBoundary>
                                           <MarketplacePage />
