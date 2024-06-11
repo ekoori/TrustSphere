@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import '../styles/App.css';
 import SphereBanner from './SphereBanner';
 
-function ServiceForm({ isVisible }) {
+
+
+
+function NewServiceForm({ isVisible }) {
   const [formData, setFormData] = useState({
     item: '',
     description: '',
@@ -51,7 +54,7 @@ function ServiceForm({ isVisible }) {
       <h3>New Service</h3>
       <form onSubmit={handleSubmit}>
 
-      <SphereBanner previewUrl={previewUrl} handleFileChange={handleFileChange} />
+      <SphereBanner previewUrl={previewUrl} onImageChange={handleFileChange} />
 
         <label htmlFor="service-type">Type:</label>
         <select 
@@ -113,4 +116,4 @@ function ServiceForm({ isVisible }) {
   );
 }
 
-export default ServiceForm;
+export default NewServiceForm;

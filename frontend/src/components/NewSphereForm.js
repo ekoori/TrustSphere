@@ -8,14 +8,24 @@ const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
   const [valueGraph, setValueGraph] = useState('');
   const [location, setLocation] = useState('');
   const [image, setImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setImage(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onCreateSphere({ name, description, valueGraph, location, image });
-  };
-
-  const handleImageChange = (imageFile) => {
-    setImage(imageFile);
   };
 
   if (!isVisible) return null;
@@ -24,7 +34,7 @@ const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
     <div id="sphere-form" className="transaction">
       <h3>Create a New Sphere</h3>
       <form onSubmit={handleSubmit}>
-        <SphereBanner image={image} onImageChange={handleImageChange} />
+      <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
 
         <label htmlFor="sphere-name">Sphere Name:</label>
         <input type="text" id="sphere-name" name="sphere-name" value={name} onChange={(e) => setName(e.target.value)} required />

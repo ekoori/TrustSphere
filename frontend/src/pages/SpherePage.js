@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import '../styles/Sphere.css';
 import SphereBanner from '../components/SphereBanner';
 
-
-
 const SpherePage = () => {
   const [sphere, setSphere] = useState({
     name: 'AI Development Sphere',
@@ -17,12 +15,21 @@ const SpherePage = () => {
     values: ['innovation', 'technology', 'collaboration'],
     bannerImage: 'static/A_banner_image_for_an_AI_Development_Sphere_in_a_s.png'
   });
+  const [previewUrl, setPreviewUrl] = useState(sphere.bannerImage);
 
-  const handleImageChange = (newImage) => {
-    setSphere((prevSphere) => ({
-      ...prevSphere,
-      bannerImage: newImage
-    }));
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setSphere((prevSphere) => ({
+        ...prevSphere,
+        bannerImage: file
+      }));
+    }
   };
 
   return (
@@ -36,7 +43,7 @@ const SpherePage = () => {
       </aside>
       <main>
         <div className="sphere-section">
-          <SphereBanner image={sphere.bannerImage} onImageChange={handleImageChange} />
+          <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
 
           <div className="sphere-description">
             <h3>Description</h3>

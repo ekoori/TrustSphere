@@ -15,8 +15,7 @@ import { Link } from 'react-router-dom';
 import '../styles/App.css';
 import '../styles/Marketplace.css';
 
-import SphereBanner from './SphereBanner';
-import ServiceForm from './ServiceForm';
+import NewServiceForm from './NewServiceForm';
 import ServiceCard from './ServiceCard';
 
 // import { useLogin } from '../App';
@@ -42,7 +41,7 @@ function Marketplace({services, newServiceVisible}) {
     
     return ( 
 <div>
-    <ServiceForm isVisible={isFormVisible} />
+    <NewServiceForm isVisible={isFormVisible} />
 
     <section className="marketplace">
         {services.map(service => (

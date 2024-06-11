@@ -3,17 +3,17 @@ import '../styles/Projects.css';
 
 const ProjectCard = ({ id, name, owner, participants, description, transactions, statusButtons, values, shoutouts, onLike }) => {
   return (
-    <div className="project" onClick={() => window.location.href = `project.html?id=${id}`}>
+    <div className="project" onClick={() => window.location.href = `/project`}>
       <div className="project-header">
         <div className="project-left">
           <h3>{name}</h3>
           <div className="project-owner">
-            <span>🔗 <a href="union.html" onClick={(e) => e.stopPropagation()}>{owner}</a></span>
+            <span>🔗 <a href="/union" onClick={(e) => e.stopPropagation()}>{owner}</a></span>
           </div>
           <div className="project-participants">
             <span>👤 {participants.slice(0, 3).map((participant, index) => (
-              <a key={index} href="user.html" onClick={(e) => e.stopPropagation()}>{participant}{index < 2 ? ', ' : ''}</a>
-            ))}, <a href="members.html" onClick={(e) => e.stopPropagation()}>{participants.length - 3} more...</a></span>
+              <a key={index} href="/user" onClick={(e) => e.stopPropagation()}>{participant}{index < 2 ? ', ' : ''}</a>
+            ))}, <a href="/project" onClick={(e) => e.stopPropagation()}>{participants.length - 3} more...</a></span>
           </div>
         </div>
         <div className="project-right">
@@ -33,7 +33,7 @@ const ProjectCard = ({ id, name, owner, participants, description, transactions,
             </div>
             <p>{transaction.details}</p>
             <div className="transaction-participants">
-              <span>👤 <a href="user.html" onClick={(e) => e.stopPropagation()}>{transaction.participant}</a></span>
+              <span>👤 <a href="/user" onClick={(e) => e.stopPropagation()}>{transaction.participant}</a></span>
             </div>
           </div>
         ))}

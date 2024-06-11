@@ -8,14 +8,23 @@ const NewUnionForm = ({ isVisible, onCreateUnion, onCancel }) => {
   const [valueGraph, setValueGraph] = useState('');
   const [location, setLocation] = useState('');
   const [image, setImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setImage(file);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onCreateUnion({ name, description, valueGraph, location, image });
-  };
-
-  const handleImageChange = (imageFile) => {
-    setImage(imageFile);
   };
 
   if (!isVisible) return null;
@@ -24,7 +33,7 @@ const NewUnionForm = ({ isVisible, onCreateUnion, onCancel }) => {
     <div id="union-form" className="transaction">
       <h3>Create a New Union</h3>
       <form onSubmit={handleSubmit}>
-        <SphereBanner image={image} onImageChange={handleImageChange} />
+        <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
 
         <label htmlFor="union-name">Union Name:</label>
         <input type="text" id="union-name" name="union-name" value={name} onChange={(e) => setName(e.target.value)} required />

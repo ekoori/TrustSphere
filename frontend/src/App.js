@@ -21,7 +21,7 @@ import Projects from './components/Projects';
 import UserRegistration from './components/UserRegistration';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import MarketplacePage from './components/MarketplacePage';
+import MarketplacePage from './pages/MarketplacePage';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import api from './api';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -38,6 +38,7 @@ import SpherePage from './pages/SpherePage';
 import Unions from './pages/Unions';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/Settings';
+import SphereManagement from './pages/SphereManagement';
 //import UserProfile from './pages/UserProfile';
 
 
@@ -160,6 +161,7 @@ function App() {
                         <Route path="/projects" element={<Projects/>}/>
                         <Route path="/spheres" element={<Spheres/>}/>
                         <Route path="/sphere" element={<SpherePage/>}/>
+                        <Route path="/sphere-management" element={<SphereManagement/>}/>
                         <Route path="/unions" element={<Unions/>}/>
                         <Route path="/marketplace" element={
                                           <ErrorBoundary>

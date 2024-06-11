@@ -10,15 +10,11 @@ Methods:
   [-] handleServiceSubmission(): submits a new service to the API (not yet implemented).
 */
 
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import '../styles/App.css';
 import '../styles/Marketplace.css';
 
-import SphereBanner from './SphereBanner';
-import ServiceForm from './ServiceForm';
-import ServiceCard from './ServiceCard';
-import Marketplace from './Marketplace';
+import Marketplace from '../components/Marketplace';
 
 // import { useLogin } from '../App';
 

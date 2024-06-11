@@ -3,14 +3,14 @@ import '../styles/Unions.css';
 
 const UnionCard = ({ id, name, participants, description, projects, values, onJoin }) => {
   return (
-    <div className="union-card" onClick={() => window.location.href = `union.html?id=${id}`}>
+    <div className="union-card" onClick={() => window.location.href = `/union`}>
       <div className="union-card-header">
         <div className="union-card-left">
           <h3>{name}</h3>
           <div className="union-card-participants">
             <span>👤 {participants.slice(0, 3).map((participant, index) => (
-              <a key={index} href="user.html" onClick={(e) => e.stopPropagation()}>{participant}{index < 2 ? ', ' : ''}</a>
-            ))}, <a href="members.html" onClick={(e) => e.stopPropagation()}>{participants.length - 3} more...</a></span>
+              <a key={index} href="/user" onClick={(e) => e.stopPropagation()}>{participant}{index < 2 ? ', ' : ''}</a>
+            ))}, <a href="/union" onClick={(e) => e.stopPropagation()}>{participants.length - 3} more...</a></span>
           </div>
         </div>
         <div className="union-card-right">
@@ -22,9 +22,9 @@ const UnionCard = ({ id, name, participants, description, projects, values, onJo
       </div>
       <div className="union-card-project-link">
         {projects.slice(0, 3).map((project, index) => (
-          <button key={index} className="btn-status" onClick={(e) => { e.stopPropagation(); window.location.href = 'project.html'; }}>{project}</button>
+          <button key={index} className="btn-status" onClick={(e) => { e.stopPropagation(); window.location.href = '/project'; }}>{project}</button>
         ))}
-        {projects.length > 3 && <a href="projects.html" onClick={(e) => e.stopPropagation()}>{projects.length - 3} more...</a>}
+        {projects.length > 3 && <a href="/projects" onClick={(e) => e.stopPropagation()}>{projects.length - 3} more...</a>}
       </div>
       <div className="union-card-values">
         {values.map((value, index) => (
