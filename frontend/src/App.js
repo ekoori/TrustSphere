@@ -34,6 +34,7 @@ import Donate from './pages/Donate';
 import Privacy from './pages/Privacy';
 import TOS from './pages/TOS';
 import Spheres from './pages/Spheres';
+import SpherePage from './pages/SpherePage';
 import Unions from './pages/Unions';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/Settings';
@@ -158,6 +159,7 @@ function App() {
                         <Route path="/profile" element={<ProfilePage/>}/>
                         <Route path="/projects" element={<Projects/>}/>
                         <Route path="/spheres" element={<Spheres/>}/>
+                        <Route path="/sphere" element={<SpherePage/>}/>
                         <Route path="/unions" element={<Unions/>}/>
                         <Route path="/marketplace" element={
                                           <ErrorBoundary>
