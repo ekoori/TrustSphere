@@ -18,40 +18,45 @@ import '../styles/Marketplace.css';
 import NewServiceForm from './NewServiceForm';
 import ServiceCard from './ServiceCard';
 
-// import { useLogin } from '../App';
-
-/*
- * Header component displaying the navigation bar
- * @param {object} props 
- * @returns JSX elements
- */
-
-function Marketplace({services, newServiceVisible}) {
-    const [isFormVisible, setIsFormVisible] = useState(false);
-
-    useEffect(() => {
-        setIsFormVisible(newServiceVisible);
-    }, [newServiceVisible]);
-
-    const toggleFormVisibility = () => {
-        setIsFormVisible(!isFormVisible);
-      };
-      
-   // const { isLoggedIn, handleLogout } = useLogin(); // Get handleLogout from useLogin hook instead of defining it locally
-    
-    return ( 
-<div>
-    <NewServiceForm isVisible={isFormVisible} />
-
-    <section className="marketplace">
-        {services.map(service => (
-          <ServiceCard key={service.id} {...service} />
-        ))}
-      </section>
-</div>
 
 
-);
-};
+function Marketplace({ services, newServiceVisible }) {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  useEffect(() => {
+      setIsFormVisible(newServiceVisible);
+  }, [newServiceVisible]);
+
+  const toggleFormVisibility = () => {
+      setIsFormVisible(!isFormVisible);
+  };
+
+  const handleAccept = (serviceId) => {
+      console.log(`Accept service: ${serviceId}`);
+      // Logic to accept the service
+  };
+
+  const handleConfirm = (serviceId) => {
+      console.log(`Confirm service: ${serviceId}`);
+      // Logic to confirm the service
+  };
+
+  return (
+      <div>
+          <NewServiceForm isVisible={isFormVisible} />
+          <section className="marketplace">
+              {services.map(service => (
+                  <ServiceCard
+                      key={service.id}
+                      {...service}
+                      onAccept={() => handleAccept(service.id)}
+                      onConfirm={() => handleConfirm(service.id)}
+                  />
+              ))}
+          </section>
+      </div>
+  );
+}
 
 export default Marketplace;
+
