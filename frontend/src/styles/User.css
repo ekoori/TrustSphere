@@ -72,29 +72,7 @@
     display: none;
 }
 
-#shoutout-entry, #trustifact-entry {
-    margin-top: 1em;
-    background-color: purple;
-    padding: 1em;
-    border-radius: 8px;
-}
 
-#shoutout-text, #trustifact-text {
-    width: 100%;
-    padding: 0.5em;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#save-shoutout-btn, #save-trustifact-btn {
-    margin-top: 0.5em;
-    padding: 0.5em;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
-    width: 100%;
-}
 
 /* Sphere list styles */
 .sphere-list {

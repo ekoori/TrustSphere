@@ -1,202 +1,88 @@
 import React, { useState } from 'react';
-import '../styles/TrustTrail.css';
-import '../styles/Marketplace.css';
 import '../styles/SphereManagement.css';
+import SphereBanner from '../components/SphereBanner';
 
-import TrustTrail from '../components/TrustTrail';
-import Marketplace from '../components/Marketplace';
-import NewServiceForm from '../components/NewServiceForm'; // Assuming this component is available
+const SphereManagement = () => {
+  const [sphere, setSphere] = useState({
+    name: 'AI Development Sphere',
+    location: 'Global',
+    status: 'Active',
+    admin: 'Jane Doe',
+    description: 'The AI Development Sphere is dedicated to advancing artificial intelligence technologies and fostering collaboration among AI researchers and developers.',
+    unions: ['Tech Union', 'AI Enthusiasts Union'],
+    members: ['Jane Doe', 'John Smith', '50 more...'],
+    projects: ['AI Ethics Initiative', 'OpenAI Collaboration'],
+    values: ['innovation', 'technology', 'collaboration'],
+    bannerImage: 'static/A_banner_image_for_an_AI_Development_Sphere_in_a_s.png'
+  });
+  const [previewUrl, setPreviewUrl] = useState(sphere.bannerImage);
 
-function SphereManagement() {
-    const [activeTab, setActiveTab] = useState('trusttrail');
-    const [isFormVisible, setIsFormVisible] = useState(false);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setSphere((prevSphere) => ({
+        ...prevSphere,
+        bannerImage: file
+      }));
+    }
+  };
 
-    const toggleTab = (tab) => {
-        setActiveTab(tab);
-    };
+  return (
+    <div className="container">
+      <aside className="sphere-sidebar">
+        <h2>{sphere.name}</h2>
+        <p><strong>Location:</strong> {sphere.location}</p>
+        <p><strong>Status:</strong> <span className="status active">{sphere.status}</span></p>
+        <p><strong>Admin:</strong> <a href="/user">{sphere.admin}</a></p>
+        <a href="/sphere-management" className="btn-orange">Manage Sphere</a>
+      </aside>
+      <main>
+        <div className="sphere-section">
+          <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
 
-    const toggleFormVisibility = () => {
-        setIsFormVisible(!isFormVisible);
-    };
-
-    const sphere = {
-        title: 'AI Development Sphere',
-        description: 'The AI Development Sphere is dedicated to advancing artificial intelligence technologies and fostering collaboration among AI researchers and developers.',
-        ownerUnion: 'AI Australia Sphere',
-        leaders: ['John Doe', 'Jane Smith']
-    };
-
-    const transactions = [
-        {
-            id: 'transaction-cpus',
-            type: 'offer',
-            sphere: 'OpenAI Sphere',
-            title: 'Requesting 7 H100 CPUs for OpenAI datacentre from Jansen Huang',
-            participants: ['You', 'Jansen Huang'],
-            description: 'This transaction involves requesting 7 H100 CPUs for the OpenAI datacentre. The request was initiated by Sam and is awaiting a response from Jansen Huang.',
-            project: 'OpenAI Datacentre Upgrades',
-            imageUrl: 'static/h100_cpus.webp',
-            time: '30 min ago',
-            status: 'Initiated',
-            likesCount: 0,
-            likedByCurrentUser: false,
-            originService: '🔍 Requesting 7 H100 CPUs',
-            initiatedTime: '30 min ago',
-            inProgressTime: '',
-            finishedTime: '',
-            trustifactedTime: '',
-            additionalCommentsTime: '',
-            trustifacts: [],
-            shoutouts: [],
-            canModify: true,
-            onAddTrustifact: () => console.log('Add Trustifact'),
-            onAddShoutout: () => console.log('Add Shoutout'),
-            onModifyTransaction: () => console.log('Modify Transaction')
-        },
-        {
-            id: 'transaction-server-rack',
-            type: 'request',
-            sphere: 'OpenAI Sphere',
-            title: 'Designing and building a server rack in OpenAI datacentre with Ilya S',
-            participants: ['Ilya S', 'You'],
-            description: 'This transaction involves the design and construction of a new server rack in the OpenAI datacentre. Ilya S, the project manager for the datacentre upgrade, initiated the transaction.',
-            project: 'Project not assigned',
-            imageUrl: '',
-            time: '1h ago',
-            status: 'Requested',
-            likesCount: 0,
-            likedByCurrentUser: false,
-            originService: '🔍 Offering Tesla Roadster Ride',
-            initiatedTime: '1h ago',
-            inProgressTime: '',
-            finishedTime: '',
-            trustifactedTime: '',
-            additionalCommentsTime: '',
-            trustifacts: [],
-            shoutouts: [],
-            canModify: true,
-            onAddTrustifact: () => console.log('Add Trustifact'),
-            onAddShoutout: () => console.log('Add Shoutout'),
-            onModifyTransaction: () => console.log('Modify Transaction')
-        },
-        {
-            id: 'transaction-garden-fences',
-            type: 'completed',
-            sphere: 'Community Garden Sphere',
-            title: 'Rebuilding fence on the garden with Jane Doe',
-            participants: ['You', 'Jane Doe'],
-            description: 'This transaction involved the replacement of the garden fence. I designed and installed the new fence, while Jane, the project manager for the Community Garden, coordinated the efforts and managed the project timeline.',
-            project: 'Service: Offering Tesla Roadster Ride',
-            imageUrl: 'static/garden_old.webp',
-            time: '15 min ago',
-            status: 'Initiated',
-            likesCount: 10,
-            likedByCurrentUser: true,
-            originService: '🔍 Building Garden Fences',
-            initiatedTime: '7d ago',
-            inProgressTime: '5d ago',
-            finishedTime: '3d ago',
-            trustifactedTime: '2d ago',
-            additionalCommentsTime: '15 min ago',
-            trustifacts: [
-                {
-                    author: 'Jane Doe',
-                    text: 'Working with Sam on the garden fence project was a fantastic experience...',
-                    time: '1d ago',
-                    likesCount: 3,
-                    likedByCurrentUser: true,
-                    imageUrl: null
-                },
-                {
-                    author: 'You',
-                    text: 'Jane\'s project management skills were top-notch...',
-                    time: '12h ago',
-                    likesCount: 5,
-                    likedByCurrentUser: true,
-                    imageUrl: 'static/garden_new.webp'
-                }
-            ],
-            shoutouts: [
-                {
-                    author: 'Emily Johnson',
-                    text: 'The new fence looks amazing! Great job, both of you!',
-                    time: '30 min ago',
-                    likesCount: 0,
-                    likedByCurrentUser: false
-                }
-            ],
-            canModify: false,
-            onAddTrustifact: () => console.log('Add Trustifact'),
-            onAddShoutout: () => console.log('Add Shoutout'),
-            onModifyTransaction: () => console.log('Modify Transaction')
-        }
-    ];
-
-    const services = [
-        {
-            id: 'service-ai-consulting',
-            type: 'offer',
-            sphere: 'AI Development Sphere',
-            title: 'Offering AI Consulting Services',
-            provider: 'Elon Musk',
-            description: 'Elon is offering his expertise in AI consulting to help innovative projects reach their full potential. His deep knowledge and experience in AI development can provide valuable insights and guidance for your next big project.',
-            project: 'Project not assigned',
-            imageUrl: 'static/garden_old.webp',
-            time: '2d ago',
-            status: 'Posted',
-            likesCount: 20,
-            likedByCurrentUser: false,
-            relatedTransactions: ['Requesting 7 H100 CPUs - involving Jansen Huang - Initiated 30 min ago'],
-            canModify: true
-        },
-        {
-            id: 'service-garden-fences',
-            type: 'offer',
-            sphere: 'Community Garden Sphere',
-            title: 'Building garden fences',
-            provider: 'Sam',
-            description: 'I am offering my services to build garden fences. With extensive experience in carpentry and landscaping, I can provide sturdy and aesthetically pleasing fences for your garden.',
-            project: 'Project not assigned',
-            imageUrl: '',
-            time: '15 min ago',
-            status: 'Posted',
-            likesCount: 10,
-            likedByCurrentUser: false,
-            relatedTransactions: ['Rebuilding fence on the garden - involving Jane Doe - Initiated 15 min ago'],
-            canModify: true
-        }
-    ];
-
-    
-
-    return (
-        <div className="container">
-            <aside>
-                <h1>{sphere.title}</h1>
-                <p className="sphere-description">{sphere.description}</p>
-                <h2>Owner Union</h2>
-                <p><a href="/union">{sphere.ownerUnion}</a></p>
-                <h2>Sphere Leaders</h2>
-                <ul className="leaders-list">
-                    {sphere.leaders.map((leader, index) => (
-                        <li key={index}><a href="/user">{leader}</a></li>
-                    ))}
-                </ul>
-                <button className="btn-orange" onClick={toggleFormVisibility}>
-                    {isFormVisible ? 'Hide New Service Form' : 'New Service'}
-                </button>
-            </aside>
-            <main>
-                <div className="selector-buttons">
-                    <button className={`btn-selector ${activeTab === 'trusttrail' ? 'active' : ''}`} onClick={() => toggleTab('trusttrail')}>TrustTrail</button>
-                    <button className={`btn-selector ${activeTab === 'offers-requests' ? 'active' : ''}`} onClick={() => toggleTab('offers-requests')}>Offers/Requests</button>
-                </div>
-
-                {activeTab === 'trusttrail' && <TrustTrail items={transactions} />}
-                {activeTab === 'offers-requests' && <Marketplace services={services} newServiceVisible={isFormVisible} />}
-            </main>
+          <div className="sphere-description">
+            <h3>Description</h3>
+            <p>{sphere.description}</p>
+          </div>
+          <div className="sphere-unions">
+            <h3>Member Unions</h3>
+            <ul className="union-list">
+              {sphere.unions.map((union, index) => (
+                <li key={index}><a href="/union">{union}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="sphere-members">
+            <h3>All Members</h3>
+            <ul className="member-list">
+              {sphere.members.map((member, index) => (
+                <li key={index}><a href={index < sphere.members.length - 1 ? "/user" : "/members"}>{member}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="sphere-projects">
+            <h3>Current Projects</h3>
+            <ul className="project-list">
+              {sphere.projects.map((project, index) => (
+                <li key={index}><a href="/project">{project}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="sphere-values">
+            <h3>Value Graph</h3>
+            {sphere.values.map((value, index) => (
+              <span key={index}>#{value}</span>
+            ))}
+          </div>
         </div>
-    );
-}
+      </main>
+    </div>
+  );
+};
 
 export default SphereManagement;

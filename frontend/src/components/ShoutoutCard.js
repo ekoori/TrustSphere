@@ -1,22 +1,40 @@
-import React from 'react';
+// File: ./frontend/src/components/ShoutoutCard.js
+
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import LikeTimestamp from './LikeTimestamp';
+import '../styles/App.css';
 
 const ShoutoutCard = ({ shoutout }) => {
+    const [liked, setLiked] = useState(shoutout.likedByCurrentUser);
+    const [likes, setLikes] = useState(shoutout.likesCount);
+
+    const handleLike = () => {
+        setLiked(!liked);
+        setLikes(liked ? likes - 1 : likes + 1);
+        // Implement further logic to update like status in the backend if necessary
+    };
+
     return (
         <div className="shoutout-card">
             <div className="shoutout-header">
                 <div className="left">
                     <span>👤 <a href="/user">{shoutout.author}</a></span>
                 </div>
+                <p className="shoutout-text">{shoutout.text}</p>
                 <div className="right">
-                    <div className="like-timestamp">
-                        <button className="like-btn">{shoutout.likedByCurrentUser ? '❤️' : '🖤'}</button>
-                        <span className="likes-count">{shoutout.likesCount}</span>
-                        <span className="time">{shoutout.time}</span>
-                    </div>
+                    <LikeTimestamp
+                        likedByCurrentUser={liked}
+                        likesCount={likes}
+                        time={shoutout.time}
+                        onLike={(e) => {
+                            e.stopPropagation();
+                            handleLike();
+                        }}
+                    />
                 </div>
             </div>
-            <p className="shoutout-text">{shoutout.text}</p>
+
         </div>
     );
 };

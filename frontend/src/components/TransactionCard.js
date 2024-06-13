@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+// File: ./frontend/src/components/TransactionCard.js
+
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import LikeTimestamp from './LikeTimestamp';
 import '../styles/TrustTrail.css';
 
 function TransactionCard({
     type,
     title,
-    sphere,
+    spheres,
     participants,
     description,
     project,
@@ -30,7 +33,12 @@ function TransactionCard({
     const [editableTitle, setEditableTitle] = useState(title);
     const [editableDescription, setEditableDescription] = useState(description);
     const [editableProject, setEditableProject] = useState(project);
-    const [editableImageUrl, setEditableImageUrl] = useState(imageUrl || 'placeholder.jpg');
+    const [editableImageUrl, setEditableImageUrl] = useState(imageUrl || '');
+    const [liked, setLiked] = useState(likedByCurrentUser);
+    const [likes, setLikes] = useState(likesCount);
+    const [isTitleEditable, setIsTitleEditable] = useState(false);
+    const [isDescriptionEditable, setIsDescriptionEditable] = useState(false);
+    const fileInputRef = useRef(null);
 
     const handleTitleChange = (e) => setEditableTitle(e.target.innerText);
     const handleDescriptionChange = (e) => setEditableDescription(e.target.innerText);
@@ -38,21 +46,75 @@ function TransactionCard({
     const handleKeyPress = (e, field) => {
         if (e.key === 'Enter') {
             e.preventDefault();
+            setIsTitleEditable(false);
+            setIsDescriptionEditable(false);
             onModifyTransaction(field, e.target.innerText);
         }
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setEditableImageUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleImagePlaceholderClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleLike = () => {
+        setLiked(!liked);
+        setLikes(liked ? likes - 1 : likes + 1);
+        // Implement further logic to update like status in the backend if necessary
+    };
+
+    const renderStatusButtons = () => {
+        const statusMapping = {
+            'Initiated': initiatedTime,
+            'In Progress': inProgressTime,
+            'Finished': finishedTime,
+            'Trustifacted': trustifactedTime,
+            'Additional Comments Added': additionalCommentsTime
+        };
+
+        return (
+            <div className="progress">
+                {Object.entries(statusMapping).map(([key, value], index) => (
+                    <div key={index} className={`step ${status === key ? 'completed' : ''}`}>
+                        {key}<br /><span className="time white">{value}</span>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
     return (
-        <div className={`transaction ${type}`} >
+        <div className={`transaction ${type}`}>
             <div className="transaction-header">
                 <div className="left">
-                    <small><a href="/sphere" onClick={(e) => e.stopPropagation()}>{sphere}</a></small>
+                    <small>
+                        {spheres.map((sphere, index) => (
+                            <React.Fragment key={index}>
+                                <a href="/sphere" onClick={(e) => e.stopPropagation()}>{sphere}</a>
+                                {index < spheres.length - 1 && ', '}
+                            </React.Fragment>
+                        ))}
+                    </small>
                     <h3
-                        contentEditable={canModify}
+                        contentEditable={isTitleEditable}
                         suppressContentEditableWarning={true}
                         onBlur={handleTitleChange}
+                        onClick={() => canModify && setIsTitleEditable(true)}
                         onKeyPress={(e) => handleKeyPress(e, 'title')}
                         className={canModify ? 'editable' : ''}
+                        style={{ backgroundColor: isTitleEditable ? '#f0f0f0' : 'transparent' }}
                     >
                         {editableTitle}
                     </h3>
@@ -68,11 +130,15 @@ function TransactionCard({
                     )}
                 </div>
                 <div className="right">
-                    <div className="like-timestamp">
-                        <button className="like-btn" onClick={(e) => e.stopPropagation()}>{likedByCurrentUser ? '❤️' : '🖤'}</button>
-                        <span className="likes-count">{likesCount}</span>
-                        <span className="time">{time}</span>
-                    </div>
+                    <LikeTimestamp
+                        likedByCurrentUser={liked}
+                        likesCount={likes}
+                        time={time}
+                        onLike={(e) => {
+                            e.stopPropagation();
+                            handleLike();
+                        }}
+                    />
                 </div>
             </div>
             <div className="description-container">
@@ -82,19 +148,27 @@ function TransactionCard({
                         alt={editableTitle}
                         className="transaction-image"
                         onClick={(e) => e.stopPropagation()}
-                        onMouseEnter={() => canModify && setEditableImageUrl('')}
                     />
                 ) : (
-                    <div className="image-placeholder" onMouseEnter={() => canModify && setEditableImageUrl('')}>
+                    <div className="image-placeholder" onClick={handleImagePlaceholderClick}>
                         Image Placeholder
                     </div>
                 )}
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                    onChange={handleImageChange}
+                />
                 <p
-                    contentEditable={canModify}
+                    contentEditable={isDescriptionEditable}
                     suppressContentEditableWarning={true}
                     onBlur={handleDescriptionChange}
+                    onClick={() => canModify && setIsDescriptionEditable(true)}
                     onKeyPress={(e) => handleKeyPress(e, 'description')}
                     className={`description ${canModify ? 'editable' : ''}`}
+                    style={{ backgroundColor: isDescriptionEditable ? '#f0f0f0' : 'transparent' }}
                 >
                     {editableDescription}
                 </p>
@@ -110,13 +184,7 @@ function TransactionCard({
                 </div>
             </div>
             <div className="status">
-                <div className="progress">
-                    <div className={`step ${status === 'Initiated' ? 'completed' : ''}`}>Initiated<br /><span className="time white">{initiatedTime}</span></div>
-                    <div className={`step ${status === 'In Progress' ? 'completed' : ''}`}>In Progress<br /><span className="time white">{inProgressTime}</span></div>
-                    <div className={`step ${status === 'Finished' ? 'completed' : ''}`}>Finished<br /><span className="time white">{finishedTime}</span></div>
-                    <div className={`step ${status === 'Trustifacted' ? 'completed' : ''}`}>Trustifacted<br /><span className="time white">{trustifactedTime}</span></div>
-                    <div className={`step ${status === 'Additional Comments Added' ? 'completed' : ''}`}>Additional Comments Added<br /><span className="time white">{additionalCommentsTime}</span></div>
-                </div>
+                {renderStatusButtons()}
             </div>
             <hr />
             {trustifacts && trustifacts.length > 0 ? (
@@ -128,11 +196,15 @@ function TransactionCard({
                                 <p><strong>{trustifact.author}:</strong> {trustifact.text}</p>
                             </div>
                             <div className="right">
-                                <div className="like-timestamp">
-                                    <button className="like-btn" onClick={(e) => e.stopPropagation()}>{trustifact.likedByCurrentUser ? '❤️' : '🖤'}</button>
-                                    <span className="likes-count">{trustifact.likesCount}</span>
-                                    <span className="time">{trustifact.time}</span>
-                                </div>
+                                <LikeTimestamp
+                                    likedByCurrentUser={trustifact.likedByCurrentUser}
+                                    likesCount={trustifact.likesCount}
+                                    time={trustifact.time}
+                                    onLike={(e) => {
+                                        e.stopPropagation();
+                                        // Logic for liking trustifact
+                                    }}
+                                />
                             </div>
                         </div>
                     ))}
@@ -142,6 +214,7 @@ function TransactionCard({
                     <button id="save-trustifact-btn" onClick={onAddTrustifact}>Add Trustifact</button>
                 </div>
             )}
+            <hr />
             <div className="shoutouts">
                 <div id="shoutout-entry">
                     <button id="save-shoutout-btn" onClick={onAddShoutout}>Add Shoutout</button>
@@ -152,11 +225,15 @@ function TransactionCard({
                             <p><strong>{shoutout.author}:</strong> {shoutout.text}</p>
                         </div>
                         <div className="right">
-                            <div className="like-timestamp">
-                                <button className="like-btn" onClick={(e) => e.stopPropagation()}>{shoutout.likedByCurrentUser ? '❤️' : '🖤'}</button>
-                                <span className="likes-count">{shoutout.likesCount}</span>
-                                <span className="time">{shoutout.time}</span>
-                            </div>
+                            <LikeTimestamp
+                                likedByCurrentUser={shoutout.likedByCurrentUser}
+                                likesCount={shoutout.likesCount}
+                                time={shoutout.time}
+                                onLike={(e) => {
+                                    e.stopPropagation();
+                                    // Logic for liking shoutout
+                                }}
+                            />
                         </div>
                     </div>
                 ))}
@@ -168,7 +245,7 @@ function TransactionCard({
 TransactionCard.propTypes = {
     type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    sphere: PropTypes.string.isRequired,
+    spheres: PropTypes.arrayOf(PropTypes.string).isRequired,
     participants: PropTypes.arrayOf(PropTypes.string).isRequired,
     description: PropTypes.string.isRequired,
     project: PropTypes.string,

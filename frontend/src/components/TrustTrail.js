@@ -31,7 +31,7 @@ function TrustTrail({ items }) {
                         key={item.id}
                         type={item.type}
                         title={item.title}
-                        sphere={item.sphere}
+                        spheres={item.spheres}
                         participants={item.participants}
                         description={item.description}
                         project={item.project}
@@ -64,7 +64,7 @@ TrustTrail.propTypes = {
         id: PropTypes.string.isRequired,
         type: PropTypes.string.isRequired,
         title: PropTypes.string,
-        sphere: PropTypes.string,
+        spheres: PropTypes.arrayOf(PropTypes.string).isRequired,
         participants: PropTypes.arrayOf(PropTypes.string),
         description: PropTypes.string,
         project: PropTypes.string,

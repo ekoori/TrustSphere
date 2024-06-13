@@ -32,7 +32,7 @@ function Home() {
         {
             id: 'transaction-cpus',
             type: 'offer',
-            sphere: 'OpenAI Sphere',
+            spheres: ['OpenAI Sphere'],
             title: 'Requesting 7 H100 CPUs for OpenAI datacentre from Jansen Huang',
             participants: ['You', 'Jansen Huang'],
             description: 'This transaction involves requesting 7 H100 CPUs for the OpenAI datacentre. The request was initiated by Sam and is awaiting a response from Jansen Huang.',
@@ -58,7 +58,7 @@ function Home() {
         {
             id: 'transaction-server-rack',
             type: 'request',
-            sphere: 'OpenAI Sphere',
+            spheres: ['OpenAI Sphere'],
             title: 'Designing and building a server rack in OpenAI datacentre with Ilya S',
             participants: ['Ilya S', 'You'],
             description: 'This transaction involves the design and construction of a new server rack in the OpenAI datacentre. Ilya S, the project manager for the datacentre upgrade, initiated the transaction.',
@@ -83,6 +83,7 @@ function Home() {
         },
         {
             id: 'shoutout-2',
+            spheres: [''],
             type: 'shoutout',
             author: 'John Doe',
             text: 'Working with Sam has been a fantastic experience. His expertise in project management is top-notch.',
@@ -93,7 +94,7 @@ function Home() {
         {
             id: 'transaction-garden-fences',
             type: 'completed',
-            sphere: 'Community Garden Sphere',
+            spheres: ['Community Garden Sphere'],
             title: 'Rebuilding fence on the garden with Jane Doe',
             participants: ['You', 'Jane Doe'],
             description: 'This transaction involved the replacement of the garden fence. I designed and installed the new fence, while Jane, the project manager for the Community Garden, coordinated the efforts and managed the project timeline.',
@@ -133,7 +134,8 @@ function Home() {
                     text: 'The new fence looks amazing! Great job, both of you!',
                     time: '30 min ago',
                     likesCount: 0,
-                    likedByCurrentUser: false
+                    likedByCurrentUser: false, 
+                    spheres:['']
                 }
             ],
             canModify: false,
@@ -144,6 +146,7 @@ function Home() {
         {
             id: 'shoutout-1',
             type: 'shoutout',
+            spheres: [''],
             author: 'Emily Johnson',
             text: 'Sam is an amazing collaborator! His insights and dedication are invaluable.',
             time: '1h ago',

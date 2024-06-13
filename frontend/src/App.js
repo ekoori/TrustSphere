@@ -28,7 +28,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import UserLogin from './components/UserLogin';
 import NotFound from './components/NotFound';
 import AdminPage from './components/AdminPage';
-import User from './components/User';
+import UserPage from './pages/UserPage';
 import Contribute from './pages/Contribute';
 import Donate from './pages/Donate';
 import Privacy from './pages/Privacy';
@@ -182,7 +182,7 @@ function App() {
                         <Route path="/tos" element={<div className='container'><TOS/></div>}/>
                         <Route path="/admin" element={<div className='container'><AdminPage/></div>}/>
                         <Route path="/settings" element={<SettingsPage/>}/>
-                        <Route path="/user" element={<User/>}/>
+                        <Route path="/user" element={<UserPage/>}/>
                         <Route path="/register" element={<div className='container'><UserRegistration/></div>}/>
                         <Route path="/login" element={<div className='container'><UserLogin/></div>}/>
                         <Route path="*" element={<div className='container'><NotFound/></div>} />
