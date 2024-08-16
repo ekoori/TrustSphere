@@ -58,16 +58,17 @@ class User(UserMixin):
         for row in rows:
             if check_password_hash(row.password, password):
                 user = cls(row.name, row.email, row.password, row.user_id)
-                session_id = cls.get_existing_session(user.user_id) or uuid.uuid4()
-                user.session_id = str(session_id)
                 
-                # Ensure that user_email and user_id are set
-                cassandra_session.execute(
-                    "INSERT INTO sessions (session_id, user_id, user_email, expire_at) VALUES (%s, %s, %s, %s)",
-                    (session_id, user.user_id, user.email, datetime.utcnow() + timedelta(hours=24))
-                )
+                # Get existing session ID, if any
+                existing_session_id = cls.get_existing_session(user.user_id)
+                if existing_session_id:
+                    user.session_id = str(existing_session_id)
+                else:
+                    user.session_id = None  # Set to None so that the session is handled by login.py
+
                 logging.info(f'User logged in with session_id: {user.session_id}')
                 return user
+        
         logging.error('Invalid email or password')
         return None
 

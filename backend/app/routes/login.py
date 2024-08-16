@@ -1,11 +1,9 @@
-"""
-File: ./backend/app/routes/login.py
-Description: This is the Flask route file handling User Login operations.
-Methods: 
-    [+] authenticate_user() : Handles POST request for '/login' route. Verifies user credentials, logs in the user, and sets up the user session.
-    [+] log_out_user() : Handles POST request for '/logout' route. Deauthenticates the user and ends the user session.
-    [+] get_logged_in_user() : Handles GET request to attain information about the currently logged-in user.
-"""
+# File: ./backend/app/routes/login.py
+# Description: This is the Flask route file handling User Login operations.
+# Methods: 
+#    [+] authenticate_user() : Handles POST request for '/login' route. Verifies user credentials, logs in the user, and sets up the user session.
+#    [+] log_out_user() : Handles POST request for '/logout' route. Deauthenticates the user and ends the user session.
+#    [+] get_logged_in_user() : Handles GET request to attain information about the currently logged-in user.
 
 from flask import request, jsonify, session, make_response, current_app
 from flask_login import login_user, logout_user, current_user
@@ -29,13 +27,13 @@ def load_user(user_id):
 def login():
     if request.method == 'OPTIONS':
         logger.info("Handling OPTIONS request for login route")
-        response = _make_default_options_response()
+        response = make_response('')
         response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, session_id')
         response.headers.add('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         logger.debug(f"Response headers for OPTIONS: {response.headers}")
-        return response
+        return response, 200
 
     # Handle the actual login (POST) request
     try:
@@ -52,9 +50,6 @@ def login():
             session['user_email'] = user.email
             session['user_id'] = user.user_id
             session['session_id'] = session_id
-
-            # Set session ID in the cookie
-            response.set_cookie('session_id', session_id, httponly=True, secure=True, samesite='Lax')
 
             # Save session using the globally defined `cassandra_session_interface`
             cassandra_session_interface.save_session(current_app, session, response)
@@ -79,13 +74,13 @@ def login():
 
 def logout():
     if request.method == 'OPTIONS':
-        response = _make_default_options_response()
+        response = make_response('')
         response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,session_id')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         logger.info("Handling OPTIONS request for logout route")
-        return response
+        return response, 200
     else:
         try:
             data = request.get_json()
@@ -115,13 +110,13 @@ def logout():
 
 def check_session():
     if request.method == 'OPTIONS':
-        response = _make_default_options_response()
+        response = make_response('')
         response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,session_id')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         logger.info("Handling OPTIONS request for check_session route")
-        return response
+        return response, 200
     else:
         try:
             session_id = request.headers.get('session_id')
@@ -135,19 +130,16 @@ def check_session():
                 return response, 401
 
             if User.check_session(session_id):
-                logger.info(f'Session is active for session_id: {session_id}')
-                response = jsonify({
-                    'status': 'active',
-                    'user_id': str(current_user.id) if current_user.is_authenticated else None
-                })
+                response = jsonify({'status': 'active', 'user_id': current_user.get_id()})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
+                logger.info(f'Session is active for session_id: {session_id}')
                 return response, 200
             else:
-                logger.error(f'Session is inactive for session_id: {session_id}')
                 response = jsonify({'status': 'inactive'})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
+                logger.error(f'Session is inactive for session_id: {session_id}')
                 return response, 401
         except Exception as e:
             logger.error(f'Error during session check: {e}')
@@ -162,8 +154,3 @@ def is_valid_uuid(uuid_to_test, version=4):
     except ValueError:
         return False
     return str(uuid_obj) == uuid_to_test
-
-def _make_default_options_response():
-    # Create a default options response. This might be provided by Flask, but defining it in case it's not available.
-    response = make_response()
-    return response

@@ -1,9 +1,15 @@
-"""
-File: ./backend/app/routes/cassandra.py
-"""
+# File: ./backend/app/routes/cassandra.py
+# Description: This file defines the session handling using Cassandra as the backend for storing session data.
+# Classes: 
+#    [+] CassandraSession - A custom session object to hold session data.
+#    [+] CassandraSessionInterface - The session interface responsible for interacting with the Cassandra database.
+# Methods: 
+#    [+] open_session() - Retrieves the session data from Cassandra based on the session_id.
+#    [+] save_session() - Saves or updates the session data in Cassandra.
 
 from flask.sessions import SessionInterface, SessionMixin
 from cassandra.cluster import Cluster
+from flask import request  # Import the request object
 import uuid
 from datetime import datetime, timedelta
 
@@ -33,6 +39,10 @@ class CassandraSessionInterface(SessionInterface):
         return CassandraSession(session_id)
 
     def save_session(self, app, session, response):
+        # Skip saving session for OPTIONS requests
+        if request.method == 'OPTIONS':
+            return
+        
         session_id = session.session_id
         user_email = session.get('user_email')
         user_id = session.get('user_id')
@@ -55,8 +65,6 @@ class CassandraSessionInterface(SessionInterface):
             """
             self.cassandra_session.execute(query, (uuid.UUID(session_id), session_data, expire_at, user_email, user_id))
 
-            response.set_cookie(app.config.get('SESSION_COOKIE_NAME', 'session_id'), session_id, httponly=True, secure=True, samesite='Lax')
+            response.set_cookie(app.config.get('SESSION_COOKIE_NAME', 'session_id'), session_id, httponly=True, secure=False, samesite='None')
         except Exception as e:
             app.logger.error(f"Error saving session: {e}")
-
-

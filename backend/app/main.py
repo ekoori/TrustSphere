@@ -1,17 +1,15 @@
-"""
-File: ./backend/app/main.py
-Description: This file is the main entry point of the backend Flask application. It sets up and configures the Flask app, initializes LoginManager, configures CORS, defines route handlers, and starts the server.
-Class: None
-Properties: None
-Methods: 
-    [+] load_user(user_id): Fetches the user with the given user_id from the User model, used by Flask-Login to manage user sessions.
-    [+] login(): Handles the POST request for user login, invokes the login() method from the User model, and starts a new user session.
-    [+] logout(): Handles the POST request for user logout, invokes the logout() method from the User model, and ends the current user session.
-    [+] check_session(): Checks the validity of a session.
-    [+] get_user(): Handles the GET request to fetch user profile details, it calls the get() method from the User model.
-    [+] register(): Handles the POST request for new user registration, it calls the register() method from the User model.
-    [x] app.run(): The application is not currently configured to run inside a WSGI container. It can be started using this method in a development environment.
-"""
+# File: ./backend/app/main.py
+# Description: This file is the main entry point of the backend Flask application. It sets up and configures the Flask app, initializes LoginManager, configures CORS, defines route handlers, and starts the server.
+# Classes: None
+# Properties: None
+# Methods: 
+#    [+] load_user(user_id): Fetches the user with the given user_id from the User model, used by Flask-Login to manage user sessions.
+#    [+] login(): Handles the POST request for user login, invokes the login() method from the User model, and starts a new user session.
+#    [+] logout(): Handles the POST request for user logout, invokes the logout() method from the User model, and ends the current user session.
+#    [+] check_session(): Checks the validity of a session.
+#    [+] get_user(): Handles the GET request to fetch user profile details, it calls the get() method from the User model.
+#    [+] register(): Handles the POST request for new user registration, it calls the register() method from the User model.
+#    [x] app.run(): The application is not currently configured to run inside a WSGI container. It can be started using this method in a development environment.
 
 from flask import Flask, jsonify
 from flask_cors import CORS
