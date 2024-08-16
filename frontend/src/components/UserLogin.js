@@ -10,29 +10,50 @@ import React, { useState } from 'react';
 import api from '../api';
 import '../styles/App.css'; 
 import '../styles/UserLogin.css'; 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-// We have destructured the onLogin property for cleaner code
-const UserLogin = ({ onLogin }) => {
+const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = async (event) => {   // Using async for better error handling
+  // Utility function to get session_id from cookies
+  const getSessionIdFromCookie = () => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; session_id=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  // Handles the login process when the form is submitted
+  const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await api.post('/api/login', { email, password }); // Using async-await approach for cleaner code
-      console.log(response.data);
-      localStorage.setItem('session_id', response.data.data.session_id);
-      console.log('user logged in: ', response.data.data.user_id)
-      localStorage.setItem('user_id', response.data.data.user_id);
-      onLogin();      
-
-      // console.log("session_id stored in local storage:", response.data.session_id);  
+        const response = await api.post('/api/login', { email, password });
+        console.log('Login response:', response.data);
+        if (response.data && response.data.data) {
+            // Retrieve the session ID from the cookie after login
+            const sessionId = getSessionIdFromCookie();  
+            if (!sessionId) {
+                console.error('No session ID found after login');
+            } else {
+                console.log('Session ID:', sessionId);
+            }
+            console.log('User ID:', response.data.data.user_id);
+            
+            navigate('/'); // Redirect to home page after successful login
+        } else {
+            console.error('Login failed:', response.data.message);
+            alert('Login failed: ' + response.data.message);
+        }
     } catch (error) {
-      const errorMessage = error?.response?.data?.data?.message || 'Login failed'; // Graceful error handling
-      alert(errorMessage);
+        const errorMessage = error?.response?.data?.message || 'Login failed';
+        console.error('Login error:', errorMessage);
+        alert(errorMessage);
     }
-  };
+};
+
+
 
   return (
     <div className="login-container">
@@ -41,13 +62,13 @@ const UserLogin = ({ onLogin }) => {
         <input 
           type="email" 
           placeholder="Email" 
-          required // Add required for form input validation
+          required 
           onChange={(e) => setEmail(e.target.value)} 
         />
         <input 
           type="password" 
           placeholder="Password" 
-          required // Add required for form input validation
+          required 
           onChange={(e) => setPassword(e.target.value)} 
         />
         <button type="submit" className="login-form-button">Login</button>

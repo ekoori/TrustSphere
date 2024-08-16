@@ -98,6 +98,7 @@ function UserPage() {
         {
             id: 'shoutout-1',
             type: 'shoutout',
+            spheres: [],
             author: 'Jane Doe',
             text: 'Elon has been an incredible collaborator on the AI research project. His insights and leadership are invaluable.',
             time: '5d ago',
@@ -172,7 +173,7 @@ function UserPage() {
                 </div>
                 {activeTab === 'trusttrail' && (
                     <div>
-                        {shoutoutFormVisible && <NewShoutoutForm onSave={(data) => console.log('Shoutout saved:', data)} />}
+                        {shoutoutFormVisible && <NewShoutoutForm onSave={(data) => console.log('Shoutout saved:', data)} onCancel={toggleShoutoutFormVisibility()} />}
                         <TrustTrail items={items} />
                     </div>
                 )}

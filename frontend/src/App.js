@@ -11,10 +11,9 @@
 //    [+] handleLogin() - Sets the isLoggedIn state to true when the user logs in.
 //    [+] handleLogout() - Sets the isLoggedIn state to false when the user logs out. 
 
-
-
 import './styles/App.css';
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import About from './pages/About';
 import Home from './pages/Home';
 import Projects from './components/Projects';
@@ -22,7 +21,6 @@ import UserRegistration from './components/UserRegistration';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MarketplacePage from './pages/MarketplacePage';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import api from './api';
 import ErrorBoundary from './components/ErrorBoundary';
 import UserLogin from './components/UserLogin';
@@ -43,106 +41,93 @@ import UnionPage from './pages/UnionPage';
 import ProjectPage from './pages/ProjectPage';
 import UnionManagement from './pages/UnionManagement';
 import ProjectManagement from './pages/ProjectManagement';
-//import UserProfile from './pages/UserProfile';
 
-
-
-// Create a context for the logged-in state
 const LoginContext = createContext();
 
-// Create a provider component for managing user's logged-in state
-export const LoginProvider = ({ children }) => {
+function LoginProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [sessionId, setSessionId] = useState(localStorage.getItem('session_id'));
-    const [userId, setUserId] = useState(localStorage.getItem('user_id'));
+    const [sessionId, setSessionId] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const navigate = useNavigate();
 
-    // This method verifies the validity of the session_id, which is stored in the local storage
-    const checkSession = async () => {
-        const session_id = localStorage.getItem('session_id');
-        // no session_id in local storage means user is not logged in
+    const getSessionIdFromCookie = () => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; session_id=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+
+    const handleLogout = useCallback(async () => {
+        const session_id = getSessionIdFromCookie();
+        console.log('Logging out with session_id:', session_id);
         if (!session_id) {
-            setIsLoggedIn(false);
-        } else {
-            try {
-                const response = await api.get('/api/check_session', {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    withCredentials: true
-                });
-                if (response.data.status === 'active') {
-                    setIsLoggedIn(true);
-                    setSessionId(session_id);
-                    setUserId(response.data.user_id);
-                    localStorage.setItem('user_id', response.data.user_id);
-                } else {
-                    setIsLoggedIn(false);
-                    localStorage.removeItem('session_id');
-                    localStorage.removeItem('user_id');
-                }
-            } catch (error) {
-                console.error('Error checking session:', error);
-                setIsLoggedIn(false);
-                localStorage.removeItem('session_id');
-                localStorage.removeItem('user_id');
-            }
-        }
-    };
-
-
-    
-    // This method manages the login mechanism
-    const handleLogin = async () => {
-        setIsLoggedIn(true);
-        const user_id = localStorage.getItem('user_id');
-        localStorage.setItem('user_id', user_id);
-        setUserId(user_id); // Set the userId state
-        // ...other login logic can go here in the future...
-    };
-
-    // This method manages the logout mechanism
-    const handleLogout = async () => {
-        // Get session_id from local storage
-        const session_id = localStorage.getItem('session_id');
-        const user_id = localStorage.getItem('user_id');
-        if (!session_id || !user_id) {
             console.error('No session to logout');
             return;
         }
         try {
-            // Make a request to the /api/logout endpoint
-            const response = await api.post('/api/logout', { session_id, user_id }, {
+            const response = await api.post('/api/logout', { session_id }, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'session_id': session_id
                 }
             });
-            // If the response is OK, update the isLoggedIn state
+            console.log('Logout response:', response.data);
             if (response.data.success) {
                 setIsLoggedIn(false);
                 setSessionId(null);
-                localStorage.removeItem('session_id');
-                localStorage.removeItem('user_id'); // Remove the userId from sessionStorage
+                setUserId(null);
+                document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                navigate('/login');
             } else {
                 console.error('Logout failed');
             }
         } catch (error) {
             console.error('Error during logout:', error);
         }
-    };
+    }, [navigate]);
 
-    // check the session when the component mounts
+    const checkSession = useCallback(async () => {
+        const session_id = getSessionIdFromCookie();
+        console.log('Checking session with session_id:', session_id);
+        if (!session_id) {
+            console.log('No session_id found in cookies');
+            setIsLoggedIn(false);
+            return;
+        }
+        try {
+            const response = await api.get('/api/check_session', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'session_id': session_id
+                },
+                withCredentials: true
+            });
+            console.log('Check session response:', response.data);
+            if (response.data.status === 'active') {
+                setIsLoggedIn(true);
+                setSessionId(session_id);
+                setUserId(response.data.user_id);
+            } else {
+                handleLogout();
+            }
+        } catch (error) {
+            console.error('Error checking session:', error);
+            handleLogout();
+        }
+    }, [handleLogout]);
+
     useEffect(() => {
         checkSession();
-    }, []);
+        const intervalId = setInterval(checkSession, 5 * 60 * 1000); // Check every 5 minutes
+        return () => clearInterval(intervalId);
+    }, [checkSession]);
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, handleLogin, handleLogout, sessionId, userId }}>
+        <LoginContext.Provider value={{ isLoggedIn, handleLogout, sessionId, userId }}>
             {children}
         </LoginContext.Provider>
     );
-};
+}
 
-// Hook to provide easy access to the login context
 export function useLogin() {
     const context = useContext(LoginContext);
     if (!context) {
@@ -151,11 +136,10 @@ export function useLogin() {
     return context;
 }
 
-// Main component that includes all routes and overall layout of the application
 function App() {
     return (
-        <LoginProvider>
-            <Router>
+        <Router>
+            <LoginProvider>
                 <div className="app-container">
                     <Header className='header'/>
                     <Routes>
@@ -172,9 +156,9 @@ function App() {
                         <Route path="/union" element={<UnionPage/>}/>
                         <Route path="/union-management" element={<UnionManagement/>}/>
                         <Route path="/marketplace" element={
-                                          <ErrorBoundary>
-                                          <MarketplacePage />
-                                          </ErrorBoundary>
+                            <ErrorBoundary>
+                                <MarketplacePage />
+                            </ErrorBoundary>
                         }/>
                         <Route path="/contribute" element={<div className='container'><Contribute/></div>}/>
                         <Route path="/donate" element={<div className='container'><Donate/></div>}/>
@@ -189,8 +173,8 @@ function App() {
                     </Routes>
                     <Footer className='footer'/>
                 </div>
-            </Router>
-        </LoginProvider>
+            </LoginProvider>
+        </Router>
     );
 }
 

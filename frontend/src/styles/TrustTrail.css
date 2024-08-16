@@ -270,7 +270,7 @@ hr {
 
 /* Add and Modify buttons */
 
-#save-shoutout-btn, #save-trustifact-btn {
+#save-shoutout-btn, #cancel-shoutout-btn {
     margin-top: 0.5em;
     padding: 0.5em;
     border: none;
@@ -278,12 +278,13 @@ hr {
     cursor: pointer;
     color: white;
     width: 100%;
+    background-color: #6a1b9a;
 }
 
 
 
-#save-shoutout-btn {
-    background-color: #6a1b9a;
+#save-trustifact-btn  {
+ /*   background-color: #6a1b9a; */
 }
 
 #save-shoutout-btn:hover {
@@ -296,4 +297,24 @@ hr {
 
 #save-trustifact-btn:hover {
     background-color: #1b5e20;
+}
+
+/* Add this at the bottom of TrustTrail.css */
+#shoutout-entry {
+    padding: 1em;
+    border-radius: 8px;
+    margin-bottom: 1em;
+}
+
+#shoutout-entry p {
+    width: 100%;
+    margin-bottom: 0.5em;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
+#shoutout-entry .btn-purple {
+    width: 49%;
 }
