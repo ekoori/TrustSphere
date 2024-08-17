@@ -70,5 +70,7 @@ def internal_error(error):
     return response
 
 if __name__ == '__main__':
+    context = ('/home/igor/TS02/backend/app/localhost.crt', '/home/igor/TS02/backend/app/localhost.key') 
     with app.app_context():
-        app.run(debug=True, host="0.0.0.0")
+        #app.run(debug=True, ssl_context=context, host="0.0.0.0")
+        app.run(debug=True,                      host="0.0.0.0")

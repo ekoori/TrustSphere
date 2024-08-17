@@ -1,4 +1,29 @@
 // File: ./frontend/src/components/TransactionCard.js
+// Description: A React component that displays a transaction card with various details, allowing for modifications and interactions.
+// Props:
+//    type - The type of transaction.
+//    title - The title of the transaction.
+//    spheres - The spheres associated with the transaction.
+//    participants - The participants involved in the transaction.
+//    description - The description of the transaction.
+//    project - The project associated with the transaction.
+//    imageUrl - The image URL for the transaction.
+//    time - The time the transaction occurred.
+//    status - The current status of the transaction.
+//    likesCount - The number of likes for the transaction.
+//    likedByCurrentUser - Whether the current user has liked the transaction.
+//    originService - The service from which the transaction originated.
+//    initiatedTime - The time the transaction was initiated.
+//    inProgressTime - The time the transaction was marked as in progress.
+//    finishedTime - The time the transaction was marked as finished.
+//    trustifactedTime - The time the transaction was marked as trustifacted.
+//    additionalCommentsTime - The time additional comments were added.
+//    trustifacts - An array of trustifacts associated with the transaction.
+//    shoutouts - An array of shoutouts associated with the transaction.
+//    onAddTrustifact - Function to call when a new trustifact is added.
+//    onAddShoutout - Function to call when a new shoutout is added.
+//    onModifyTransaction - Function to call when the transaction is modified.
+//    canModify - Whether the transaction can be modified.
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -79,7 +104,7 @@ function TransactionCard({
                     </div>
                     {originService && (
                         <div className="origin-service">
-                            <small><a href="#" onClick={(e) => e.stopPropagation()}>{originService}</a></small>
+                            <small><button onClick={(e) => e.stopPropagation()} className="link-button">{originService}</button></small>
                         </div>
                     )}
                 </div>
@@ -134,7 +159,7 @@ function TransactionCard({
                 </p>
                 <div className="project-link" onMouseEnter={() => canModify && setEditableProject('')}>
                     {editableProject ? (
-                        <a href="#" onClick={(e) => e.stopPropagation()}>{editableProject}</a>
+                        <button onClick={(e) => e.stopPropagation()} className="link-button">{editableProject}</button>
                     ) : (
                         <select onChange={(e) => setEditableProject(e.target.value)}>
                             <option value="Project 1">Project 1</option>

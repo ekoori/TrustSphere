@@ -1,27 +1,35 @@
-// File: ./frontend/src/components/UserLogin.js:
-// Description: This is React.js file for User Login Component.
-// Class: UserLogin - Consists of form to allow user login to the application.
+// File: ./frontend/src/components/UserLogin.js
+// Description: This is the React.js file for the User Login Component.
+// Class: UserLogin - Consists of a form to allow user login to the application.
 // Properties:
-//    state - contains the user's entered email and password.
+//    state - Contains the user's entered email and password.
 // Methods:
-//    handleLogin - submits the form and calls the API endpoint for login.
+//    handleLogin - Submits the form and calls the API endpoint for login.
+//    getSessionIdFromCookie - Utility function to retrieve the session ID from cookies.
 
 import React, { useState } from 'react';
 import api from '../api';
 import '../styles/App.css'; 
 import '../styles/UserLogin.css'; 
 import { Link, useNavigate } from 'react-router-dom';
+import { useLogin } from '../App';  // Import useLogin hook
 
 const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setIsLoggedIn, setSessionId } = useLogin();  // Destructure from context
   const navigate = useNavigate();
 
   // Utility function to get session_id from cookies
   const getSessionIdFromCookie = () => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; session_id=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) {
+      const cookieValue = parts.pop().split(';').shift();
+      console.info('Session ID from cookie:', cookieValue);
+      return cookieValue;
+    }
+    console.info('No session_id found in cookies');
     return null;
   };
 
@@ -32,16 +40,19 @@ const UserLogin = () => {
         const response = await api.post('/api/login', { email, password });
         console.log('Login response:', response.data);
         if (response.data && response.data.data) {
-            // Retrieve the session ID from the cookie after login
-            const sessionId = getSessionIdFromCookie();  
-            if (!sessionId) {
-                console.error('No session ID found after login');
-            } else {
-                console.log('Session ID:', sessionId);
-            }
-            console.log('User ID:', response.data.data.user_id);
-            
-            navigate('/'); // Redirect to home page after successful login
+            // After receiving the login response, wait for a short moment before retrieving the session ID
+            setTimeout(() => {
+                const sessionId = getSessionIdFromCookie();  
+                if (!sessionId) {
+                    console.info('No session ID found after login');
+                } else {
+                    console.log('Session ID:', sessionId);
+                    setSessionId(sessionId);  // Set sessionId in context
+                    setIsLoggedIn(true);  // Set isLoggedIn to true in context
+                }
+                console.log('User ID:', response.data.data.user_id);
+                navigate('/'); // Redirect to home page after successful login
+            }, 1000); // Delay of 1000ms to allow the cookie to be set
         } else {
             console.error('Login failed:', response.data.message);
             alert('Login failed: ' + response.data.message);
@@ -51,9 +62,7 @@ const UserLogin = () => {
         console.error('Login error:', errorMessage);
         alert(errorMessage);
     }
-};
-
-
+  };
 
   return (
     <div className="login-container">

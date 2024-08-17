@@ -1,4 +1,4 @@
-// File: ./frontend/src/App.js:
+// File: ./frontend/src/App.js
 // Description: This is the main component where routing is set up and different page components & layout components are loaded based on routing.
 // Classes: 
 //    [+] App - The main layout of the application, including routing.
@@ -9,7 +9,7 @@
 // Methods:
 //    [+] checkSession() - Checks if the user is logged in by validating the session_id from the local storage.
 //    [+] handleLogin() - Sets the isLoggedIn state to true when the user logs in.
-//    [+] handleLogout() - Sets the isLoggedIn state to false when the user logs out. 
+//    [+] handleLogout() - Sets the isLoggedIn state to false when the user logs out.
 
 import './styles/App.css';
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
@@ -53,8 +53,15 @@ function LoginProvider({ children }) {
     const getSessionIdFromCookie = () => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; session_id=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
+        if (parts.length === 2) {
+            const cookieValue = parts.pop().split(';').shift();
+            console.info('Session ID from cookie:', cookieValue);
+            return cookieValue;
+        }
+        console.info('No session_id found in cookies');
+        return null;
     };
+    
 
     const handleLogout = useCallback(async () => {
         const session_id = getSessionIdFromCookie();
@@ -110,7 +117,7 @@ function LoginProvider({ children }) {
                 handleLogout();
             }
         } catch (error) {
-            console.error('Error checking session:', error);
+            console.info('Error checking session:', error);
             handleLogout();
         }
     }, [handleLogout]);
@@ -122,7 +129,7 @@ function LoginProvider({ children }) {
     }, [checkSession]);
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, handleLogout, sessionId, userId }}>
+        <LoginContext.Provider value={{ isLoggedIn, handleLogout, setIsLoggedIn, sessionId, setSessionId, userId }}>
             {children}
         </LoginContext.Provider>
     );

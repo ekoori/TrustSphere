@@ -41,7 +41,14 @@ def login():
         logger.debug(f'Login data received: {data}')
         user = User.login(data)
         if user:
-            session_id = user.session_id or str(uuid.uuid4())
+            # Retrieve the existing session ID from the session object
+            session_id = session.get('session_id')
+            
+            if not session_id:
+                # Generate a session ID only if it doesn't already exist
+                session_id = user.session_id or str(uuid.uuid4())
+                session['session_id'] = session_id
+            
             user.session_id = session_id
 
             response = make_response(jsonify({'message': 'User logged in successfully', 'data': user.to_dict()}))
@@ -49,7 +56,6 @@ def login():
             # Set session data
             session['user_email'] = user.email
             session['user_id'] = user.user_id
-            session['session_id'] = session_id
 
             # Save session using the globally defined `cassandra_session_interface`
             cassandra_session_interface.save_session(current_app, session, response)
