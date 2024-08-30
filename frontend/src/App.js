@@ -46,81 +46,53 @@ const LoginContext = createContext();
 
 function LoginProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [sessionId, setSessionId] = useState(null);
     const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
-    const getSessionIdFromCookie = () => {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; session_id=`);
-        if (parts.length === 2) {
-            const cookieValue = parts.pop().split(';').shift();
-            console.info('Session ID from cookie:', cookieValue);
-            return cookieValue;
-        }
-        console.info('No session_id found in cookies');
-        return null;
-    };
-    
-
-    const handleLogout = useCallback(async () => {
-        const session_id = getSessionIdFromCookie();
-        console.log('Logging out with session_id:', session_id);
-        if (!session_id) {
-            console.error('No session to logout');
-            return;
-        }
+    const handleLogout = async () => {
         try {
-            const response = await api.post('/api/logout', { session_id }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'session_id': session_id
-                }
+            const response = await api.post('/api/logout', {}, {
+                withCredentials: true,
             });
-            console.log('Logout response:', response.data);
             if (response.data.success) {
-                setIsLoggedIn(false);
-                setSessionId(null);
-                setUserId(null);
-                document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                navigate('/login');
+                console.log('Logout successful');
+                setIsLoggedIn(false);  // Update login state
+                setUserId(null);  // Clear user ID
+                navigate('/login');  // Redirect to login page
             } else {
-                console.error('Logout failed');
+                console.error('Logout failed:', response.data.message);
+                alert('Logout failed: ' + response.data.message);
             }
         } catch (error) {
             console.error('Error during logout:', error);
+            alert('Error during logout: ' + error.message);
         }
-    }, [navigate]);
+    };
+    
+    
 
     const checkSession = useCallback(async () => {
-        const session_id = getSessionIdFromCookie();
-        console.log('Checking session with session_id:', session_id);
-        if (!session_id) {
-            console.log('No session_id found in cookies');
-            setIsLoggedIn(false);
-            return;
-        }
         try {
             const response = await api.get('/api/check_session', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'session_id': session_id
-                },
                 withCredentials: true
             });
             console.log('Check session response:', response.data);
-            if (response.data.status === 'active') {
+            if (response.data.status === 'active' && response.data.user_id) {
                 setIsLoggedIn(true);
-                setSessionId(session_id);
                 setUserId(response.data.user_id);
             } else {
-                handleLogout();
+                console.log('No active session found');
+                setIsLoggedIn(false);
+                setUserId(null);
             }
         } catch (error) {
-            console.info('Error checking session:', error);
-            handleLogout();
+            console.info('No active session or error checking session:', error);
+            setIsLoggedIn(false);
+            setUserId(null);
         }
-    }, [handleLogout]);
+    }, []);
+    
+    
 
     useEffect(() => {
         checkSession();
@@ -129,7 +101,7 @@ function LoginProvider({ children }) {
     }, [checkSession]);
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, handleLogout, setIsLoggedIn, sessionId, setSessionId, userId }}>
+        <LoginContext.Provider value={{ isLoggedIn, handleLogout, setIsLoggedIn, userId }}>
             {children}
         </LoginContext.Provider>
     );

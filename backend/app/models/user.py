@@ -97,9 +97,25 @@ class User(UserMixin):
 
     @classmethod
     def logout(cls, session_id):
-        logging.info(f'Logging out session with session_id: {session_id}')
-        query = "DELETE FROM sessions WHERE session_id = %s"
-        cassandra_session.execute(query, (uuid.UUID(session_id),))
+        try:
+            # Debug: Print the session ID to ensure it's correct
+            logging.info(f'Logging out session with session_id: {session_id}')
+
+            # Convert the session_id to a UUID object
+            session_uuid = uuid.UUID(session_id)
+
+            # Query to delete the session
+            query = "DELETE FROM sessions WHERE session_id = %s"
+
+            # Execute the delete query
+            result = cassandra_session.execute(query, (session_uuid,))
+
+            # Debug: Check if the deletion was successful
+            logging.info(f'Session with session_id {session_id} has been deleted. Result: {result}')
+
+        except Exception as e:
+            logging.error(f'Error during logout: {e}')
+
 
     @classmethod
     def get(cls, user_id):

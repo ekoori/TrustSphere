@@ -11,6 +11,7 @@
 #    [+] register(): Handles the POST request for new user registration, it calls the register() method from the User model.
 #    [x] app.run(): The application is not currently configured to run inside a WSGI container. It can be started using this method in a development environment.
 
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager
@@ -32,7 +33,7 @@ app.config['SESSION_COOKIE_NAME'] = 'session_id'  # Explicitly define the sessio
 
 # Enable CORS for all routes before defining any routes
 CORS(app, resources={r"/api/*": {
-    "origins": ["http://localhost:3000", "http://143.42.34.42:3000"],  # List of allowed origins
+    "origins": ["https://localhost:3000", "https://143.42.34.42:3000"],  # Update these to match your HTTPS frontend
     "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "session_id"],
     "supports_credentials": True
 }})
@@ -73,4 +74,4 @@ if __name__ == '__main__':
     context = ('/home/igor/TS02/backend/app/localhost.crt', '/home/igor/TS02/backend/app/localhost.key') 
     with app.app_context():
         #app.run(debug=True, ssl_context=context, host="0.0.0.0")
-        app.run(debug=True,                      host="0.0.0.0")
+        app.run(debug=True, host="0.0.0.0")

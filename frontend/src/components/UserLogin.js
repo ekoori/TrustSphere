@@ -17,42 +17,25 @@ import { useLogin } from '../App';  // Import useLogin hook
 const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setIsLoggedIn, setSessionId } = useLogin();  // Destructure from context
+  const { isLoggedIn, setIsLoggedIn, setUserId } = useLogin();  // Destructure from context
   const navigate = useNavigate();
-
-  // Utility function to get session_id from cookies
-  const getSessionIdFromCookie = () => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; session_id=`);
-    if (parts.length === 2) {
-      const cookieValue = parts.pop().split(';').shift();
-      console.info('Session ID from cookie:', cookieValue);
-      return cookieValue;
-    }
-    console.info('No session_id found in cookies');
-    return null;
-  };
 
   // Handles the login process when the form is submitted
   const handleLogin = async (event) => {
     event.preventDefault();
+    if (isLoggedIn) {
+        alert('You are already logged in. Please log out before logging in again.');
+        return;
+    }
     try {
-        const response = await api.post('/api/login', { email, password });
+        const response = await api.post('/api/login', { email, password }, {
+            withCredentials: true
+        });
         console.log('Login response:', response.data);
-        if (response.data && response.data.data) {
-            // After receiving the login response, wait for a short moment before retrieving the session ID
-            setTimeout(() => {
-                const sessionId = getSessionIdFromCookie();  
-                if (!sessionId) {
-                    console.info('No session ID found after login');
-                } else {
-                    console.log('Session ID:', sessionId);
-                    setSessionId(sessionId);  // Set sessionId in context
-                    setIsLoggedIn(true);  // Set isLoggedIn to true in context
-                }
-                console.log('User ID:', response.data.data.user_id);
-                navigate('/'); // Redirect to home page after successful login
-            }, 1000); // Delay of 1000ms to allow the cookie to be set
+        if (response.status === 200 && response.data && response.data.data) {
+            setIsLoggedIn(true);  // Set isLoggedIn to true in context
+            setUserId(response.data.data.user_id);  // Set userId in context
+            navigate('/'); // Redirect to home page after successful login
         } else {
             console.error('Login failed:', response.data.message);
             alert('Login failed: ' + response.data.message);
@@ -62,7 +45,8 @@ const UserLogin = () => {
         console.error('Login error:', errorMessage);
         alert(errorMessage);
     }
-  };
+};
+
 
   return (
     <div className="login-container">
@@ -88,3 +72,4 @@ const UserLogin = () => {
 };
 
 export default UserLogin;
+

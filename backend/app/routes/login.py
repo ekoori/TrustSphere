@@ -41,13 +41,9 @@ def login():
         logger.debug(f'Login data received: {data}')
         user = User.login(data)
         if user:
-            # Retrieve the existing session ID from the session object
-            session_id = session.get('session_id')
-            
-            if not session_id:
-                # Generate a session ID only if it doesn't already exist
-                session_id = user.session_id or str(uuid.uuid4())
-                session['session_id'] = session_id
+            # Generate a session ID if it doesn't already exist
+            session_id = user.session_id or str(uuid.uuid4())
+            session['session_id'] = session_id
             
             user.session_id = session_id
 
@@ -89,23 +85,28 @@ def logout():
         return response, 200
     else:
         try:
-            data = request.get_json()
-            session_id = data.get('session_id')
-            logger.info(f'Received session_id: {session_id}')
+            session_id = request.cookies.get('session_id')
+            logger.info(f'Retrieved session_id from cookie: {session_id}')
 
             if not session_id or not is_valid_uuid(session_id):
-                logger.error(f'Invalid session_id: {session_id}')
+                logger.error(f'Invalid session_id retrieved from cookie: {session_id}')
                 response = jsonify({'error': 'Invalid session_id'})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
                 return response, 400
 
+            # Call the logout function to delete the session from the database
             User.logout(session_id)
             logout_user()
+
+            # Clear the session cookie and remove session data
             response = jsonify(success=True)
+            response.set_cookie('session_id', '', expires=0, path='/')
+            session.clear()  # Clear the session data
+            
+            logger.info(f'Session deleted and user logged out with session_id: {session_id}')
             response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
             response.headers.add('Access-Control-Allow-Credentials', 'true')
-            logger.info(f'User logged out with session_id: {session_id}')
             return response, 200
         except Exception as e:
             logger.error(f'Error during logout: {e}')
@@ -113,6 +114,9 @@ def logout():
             response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
             response.headers.add('Access-Control-Allow-Credentials', 'true')
             return response, 500
+
+
+
 
 def check_session():
     if request.method == 'OPTIONS':
@@ -125,34 +129,37 @@ def check_session():
         return response, 200
     else:
         try:
-            session_id = request.headers.get('session_id')
+            session_id = request.cookies.get('session_id')
             logger.info(f'Checking session for session_id: {session_id}')
 
             if not session_id or not is_valid_uuid(session_id):
-                logger.error(f'Invalid session_id: {session_id}')
-                response = jsonify({'status': 'inactive'})
+                logger.info(f'No valid session_id found, or session_id is invalid: {session_id}')
+                response = jsonify({'status': 'inactive', 'user_id': None})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
-                return response, 401
+                return response, 200  # Return 200 even if the session is inactive
 
             if User.check_session(session_id):
-                response = jsonify({'status': 'active', 'user_id': current_user.get_id()})
+                user = current_user if current_user.is_authenticated else User.get(session_id)  # Load the user
+                response = jsonify({'status': 'active', 'user_id': user.get_id() if user else None})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
-                logger.info(f'Session is active for session_id: {session_id}')
+                logger.info(f'Session is active for session_id: {session_id}, user_id: {user.get_id() if user else None}')
                 return response, 200
             else:
-                response = jsonify({'status': 'inactive'})
+                response = jsonify({'status': 'inactive', 'user_id': None})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
-                logger.error(f'Session is inactive for session_id: {session_id}')
-                return response, 401
+                logger.info(f'Session is inactive or not found for session_id: {session_id}')
+                return response, 200  # Return 200 even if the session is inactive
         except Exception as e:
             logger.error(f'Error during session check: {e}')
             response = jsonify({'error': 'Session check failed due to an internal error'})
             response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
             response.headers.add('Access-Control-Allow-Credentials', 'true')
             return response, 500
+
+
 
 def is_valid_uuid(uuid_to_test, version=4):
     try:

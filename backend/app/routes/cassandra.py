@@ -44,7 +44,6 @@ class CassandraSessionInterface(SessionInterface):
         app.logger.debug(f'New session created with session_id: {session_id}')
         return CassandraSession(session_id)
 
-
     def save_session(self, app, session, response):
         # Skip saving session for OPTIONS requests
         if request.method == 'OPTIONS':
@@ -93,14 +92,12 @@ class CassandraSessionInterface(SessionInterface):
 
             # Only set the cookie if it hasn't been set already
             if 'Set-Cookie' not in response.headers:
-                #response.set_cookie(app.config.get('SESSION_COOKIE_NAME', 'session_id'), session_id, httponly=True, secure=False, samesite='None', domain="localhost", path="/")
                 response.set_cookie(
                     app.config.get('SESSION_COOKIE_NAME', 'session_id'), 
                     session_id, 
                     httponly=True, 
                     secure=False,  # Temporarily set to False for local development
                     samesite='None', 
-                    #domain="localhost:3000", 
                     path="/"
                 )
             else:

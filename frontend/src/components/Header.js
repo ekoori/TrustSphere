@@ -6,16 +6,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/App.css';
-import { useLogin } from '../App';
+import { useLogin } from '../App';  // Import the useLogin hook from App.js
 import NotificationPanel from './NotificationPanel';
 
 const Header = () => {
-    const { isLoggedIn, handleLogout } = useLogin();
+    const { isLoggedIn, handleLogout } = useLogin();  // Destructure the isLoggedIn and handleLogout from context
     const [notificationsVisible, setNotificationsVisible] = useState(false);
 
     const toggleNotifications = () => {
         setNotificationsVisible(!notificationsVisible);
     };
+
+    console.log('Header - isLoggedIn:', isLoggedIn); // Debug log to check login state
 
     const notifications = [
         {
@@ -54,22 +56,22 @@ const Header = () => {
             <nav>
                 <ul>
                     <li className="notification-icon">
-                        <a href="#" id="notification-bell" onClick={toggleNotifications}>🔔</a>
+                        <button id="notification-bell" onClick={toggleNotifications} aria-label="Toggle notifications">🔔</button>
                         <NotificationPanel notifications={notifications} isVisible={notificationsVisible} onClose={toggleNotifications} />
                     </li>
-                    <li><a href="/marketplace">Marketplace</a></li>
-                    <li><a href="/spheres">Spheres</a></li>
-                    <li><a href="/unions">Unions</a></li>
-                    <li><a href="/projects">Projects</a></li>
-                    <li><a href="/profile">Profile</a></li>
-                    <li><a href="/settings">Settings</a></li>
-                    <li><a href="/admin">Admin</a></li>
-                    <li><a href="/donate">Donate 💰</a></li>
+                    <li><Link to="/marketplace">Marketplace</Link></li>
+                    <li><Link to="/spheres">Spheres</Link></li>
+                    <li><Link to="/unions">Unions</Link></li>
+                    <li><Link to="/projects">Projects</Link></li>
+                    <li><Link to="/profile">Profile</Link></li>
+                    <li><Link to="/settings">Settings</Link></li>
+                    <li><Link to="/admin">Admin</Link></li>
+                    <li><Link to="/donate">Donate 💰</Link></li>
                     <li><Link to="/profile">Profile</Link></li>
                     <li><Link to="/about">About</Link></li>
                     {isLoggedIn 
-                        ? <li><button onClick={handleLogout}>Logout</button></li>
-                        : <li><Link to="/login">Login</Link></li>
+                        ? <li><button onClick={handleLogout}>Logout</button></li>  // Show Logout if logged in
+                        : <li><Link to="/login">Login</Link></li>  // Show Login if not logged in
                     }
                 </ul>
             </nav>
