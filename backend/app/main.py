@@ -1,5 +1,6 @@
 # File: ./backend/app/main.py
-# Description: This file is the main entry point of the backend Flask application. It sets up and configures the Flask app, initializes LoginManager, configures CORS, defines route handlers, and starts the server.
+# Description: This file is the main entry point of the backend Flask application. It sets up and configures the Flask app, initializes LoginManager,
+#              configures CORS, defines route handlers, sets up error handling, and starts the server.
 # Classes: None
 # Properties: None
 # Methods: 
@@ -9,8 +10,8 @@
 #    [+] check_session(): Checks the validity of a session.
 #    [+] get_user(): Handles the GET request to fetch user profile details, it calls the get() method from the User model.
 #    [+] register(): Handles the POST request for new user registration, it calls the register() method from the User model.
+#    [+] internal_error(error): Custom error handler for 500 Internal Server Error.
 #    [x] app.run(): The application is not currently configured to run inside a WSGI container. It can be started using this method in a development environment.
-
 
 from flask import Flask, jsonify
 from flask_cors import CORS

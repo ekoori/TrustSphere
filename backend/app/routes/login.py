@@ -1,9 +1,15 @@
 # File: ./backend/app/routes/login.py
-# Description: This is the Flask route file handling User Login operations.
+# Description: This file manages user authentication and session management for the TrustSphere platform.
+#              It defines the routes for user login, logout, and session verification.
+# Classes: None
+# Properties: None
 # Methods: 
-#    [+] authenticate_user() : Handles POST request for '/login' route. Verifies user credentials, logs in the user, and sets up the user session.
-#    [+] log_out_user() : Handles POST request for '/logout' route. Deauthenticates the user and ends the user session.
-#    [+] get_logged_in_user() : Handles GET request to attain information about the currently logged-in user.
+#    [+] load_user(user_id): Retrieves a user by their user_id, used by Flask-Login for session management.
+#    [+] login(): Handles the POST request for user login, verifies user credentials, creates a session, and sets the session cookie.
+#    [+] logout(): Handles the POST request for user logout, clears the session cookie, and removes the session from the database.
+#    [+] check_session(): Handles GET and POST requests to verify if a session is active or inactive.
+#    [+] is_valid_uuid(uuid_to_test, version=4): Utility function to validate if a string is a valid UUID of a specified version.
+
 
 from flask import request, jsonify, session, make_response, current_app
 from flask_login import login_user, logout_user, current_user

@@ -1,6 +1,24 @@
-"""
-File: ./backend/app/models/user.py
-"""
+# File: ./backend/app/models/user.py
+# Description: This file defines the User model, which manages user authentication, registration, session management, and user retrieval using Cassandra
+#              as the database.
+# Classes:
+#    [+] User - Represents a user in the application, with methods to manage user authentication, registration, session management, and retrieval.
+# Properties:
+#    [+] name - The name of the user.
+#    [+] email - The email address of the user.
+#    [+] password - The hashed password of the user.
+#    [+] user_id - The unique identifier for the user.
+#    [+] session_id - The current session identifier associated with the user.
+# Methods: 
+#    [+] __init__(self, name, email, password, user_id, session_id=None): Initializes a new User instance with the provided details.
+#    [+] get_id(self): Returns the user_id of the user as a string.
+#    [+] to_dict(self): Returns the user's details as a dictionary.
+#    [+] register(cls, data): Registers a new user in the system and stores the user details in Cassandra.
+#    [+] login(cls, data): Authenticates a user by checking the provided credentials against stored records in Cassandra.
+#    [+] get_existing_session(cls, user_id): Retrieves an existing session ID for a user if one exists and is active.
+#    [+] check_session(cls, session_id): Verifies if a session with the given session_id is still active.
+#    [+] logout(cls, session_id): Logs out a user by deleting their session from Cassandra.
+#    [+] get(cls, user_id): Retrieves a user's details from Cassandra using their user_id.
 
 from cassandra.cluster import Cluster
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,8 +33,8 @@ cluster = Cluster(['143.42.34.42'])
 cassandra_session = cluster.connect('trustsphere')
 
 class User(UserMixin):
-    def __init__(self, name, email, password, user_id, session_id=None):
-        self.name = name
+    def __init__(self, email, password, user_id, session_id=None):
+        self.name = "name"
         self.email = email
         self.password = password
         self.user_id = user_id
@@ -52,12 +70,14 @@ class User(UserMixin):
         password = data['password']
         logging.info(f'Attempting login for email: {email}')
 
-        query = "SELECT * FROM users WHERE email = %s ALLOW FILTERING"
+        query = "SELECT * FROM user_credentials WHERE email = %s ALLOW FILTERING"
         rows = cassandra_session.execute(query, (email,))
 
         for row in rows:
             if check_password_hash(row.password, password):
-                user = cls(row.name, row.email, row.password, row.user_id)
+                # now querying user_credentials instead of users, new table has no name field so we'll have to pull it from users in a separate query if needed.
+                #user = cls(row.name, row.email, row.password, row.user_id)
+                user = cls(row.email, row.password, row.user_id)
                 
                 # Get existing session ID, if any
                 existing_session_id = cls.get_existing_session(user.user_id)

@@ -1,11 +1,12 @@
 // File: ./frontend/src/components/UserLogin.js
 // Description: This is the React.js file for the User Login Component.
-// Class: UserLogin - Consists of a form to allow user login to the application.
-// Properties:
-//    state - Contains the user's entered email and password.
-// Methods:
-//    handleLogin - Submits the form and calls the API endpoint for login.
-//    getSessionIdFromCookie - Utility function to retrieve the session ID from cookies.
+// Classes/Methods/Properties: 
+//    [+] UserLogin - The main component for the user login form.
+//        [+] email - State property to store the user's entered email.
+//        [+] password - State property to store the user's entered password.
+//        [+] handleLogin - Handles the form submission for logging in the user.
+
+
 
 import React, { useState } from 'react';
 import api from '../api';
@@ -34,7 +35,7 @@ const UserLogin = () => {
         console.log('Login response:', response.data);
         if (response.status === 200 && response.data && response.data.data) {
             setIsLoggedIn(true);  // Set isLoggedIn to true in context
-            setUserId(response.data.data.user_id);  // Set userId in context
+            setUserId(response.data.user_id);  // Set userId in context
             navigate('/'); // Redirect to home page after successful login
         } else {
             console.error('Login failed:', response.data.message);

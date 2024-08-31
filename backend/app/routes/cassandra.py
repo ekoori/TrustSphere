@@ -1,11 +1,13 @@
 # File: ./backend/app/routes/cassandra.py
-# Description: This file defines the session handling using Cassandra as the backend for storing session data.
-# Classes: 
-#    [+] CassandraSession - A custom session object to hold session data.
+# Description: This file implements session management using Cassandra as the backend for storing session data, providing a custom session interface and session object.
+# Classes/Methods:
+#    [+] CassandraSession - A custom session object that holds session data.
+#        [+] __init__(session_id, initial=None) - Initializes the session with a given session_id and optional initial data.
 #    [+] CassandraSessionInterface - The session interface responsible for interacting with the Cassandra database.
-# Methods: 
-#    [+] open_session() - Retrieves the session data from Cassandra based on the session_id.
-#    [+] save_session() - Saves or updates the session data in Cassandra.
+#        [+] __init__(cluster_nodes, keyspace, session_lifetime) - Initializes the session interface with the given Cassandra cluster, keyspace, and session lifetime.
+#        [+] open_session(app, request) - Retrieves the session data from Cassandra based on the session_id found in the request cookies. If no session_id is found, it creates a new session.
+#        [+] save_session(app, session, response) - Saves or updates the session data in Cassandra, setting the session_id in a cookie if not already set.
+
 
 from flask.sessions import SessionInterface, SessionMixin
 from cassandra.cluster import Cluster

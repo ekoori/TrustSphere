@@ -1,4 +1,14 @@
 // File: ./frontend/src/pages/ProfilePage.js
+// Description: This is the React.js file for the user profile page. It displays user information and allows editing if the user is logged in.
+// Classes/Methods/Properties:
+//    [+] ProfilePage - The main component for the profile page.
+//        [+] isEditing - State property to track whether the profile is in edit mode.
+//        [+] profileData - State property to store the user's profile information.
+//        [+] handleEditToggle - Toggles the edit mode for the profile.
+//        [+] handleInputChange - Handles changes to the input fields in the edit mode.
+//        [+] handleImageChange - Handles changes to the profile image.
+//        [+] handleSaveChanges - Saves the changes made to the profile.
+
 
 import React, { useState, useEffect } from 'react';
 import '../styles/Profile.css';

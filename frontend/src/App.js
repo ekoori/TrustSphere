@@ -1,15 +1,16 @@
 // File: ./frontend/src/App.js
 // Description: This is the main component where routing is set up and different page components & layout components are loaded based on routing.
-// Classes: 
+// Classes/Methods/Properties: 
 //    [+] App - The main layout of the application, including routing.
 //    [+] LoginProvider - Provides the logged-in state throughout the app using Context API.
-// Properties:
-//    [+] isLoggedIn - stores the user's logged-in state.
-//    [+] sessionId - stores the current session's id.
-// Methods:
-//    [+] checkSession() - Checks if the user is logged in by validating the session_id from the local storage.
-//    [+] handleLogin() - Sets the isLoggedIn state to true when the user logs in.
-//    [+] handleLogout() - Sets the isLoggedIn state to false when the user logs out.
+//        [+] Properties:
+//            [+] isLoggedIn - stores the user's logged-in state.
+//            [+] userId - stores the current user's ID.
+//        [+] Methods:
+//            [+] handleLogout() - Logs out the user, clears the session, and navigates to the login page.
+//            [+] checkSession() - Checks if the user is logged in by validating the session_id from the backend.
+//        [+] useLogin() - Custom hook that provides access to the login context.
+
 
 import './styles/App.css';
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
@@ -101,7 +102,7 @@ function LoginProvider({ children }) {
     }, [checkSession]);
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, handleLogout, setIsLoggedIn, userId }}>
+        <LoginContext.Provider value={{ isLoggedIn, handleLogout, setIsLoggedIn, userId, setUserId }}>
             {children}
         </LoginContext.Provider>
     );
