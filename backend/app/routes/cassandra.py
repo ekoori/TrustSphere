@@ -29,7 +29,7 @@ class CassandraSessionInterface(SessionInterface):
     def open_session(self, app, request):
         session_cookie_name = app.config.get('SESSION_COOKIE_NAME', 'session_id')
         session_id = request.cookies.get(session_cookie_name)
-        
+
         if session_id:
             result = self.cassandra_session.execute(
                 "SELECT session_id, user_email, user_id FROM sessions WHERE session_id = %s", 
@@ -39,12 +39,13 @@ class CassandraSessionInterface(SessionInterface):
                 data = result.one()
                 session_data = {'user_email': data.user_email, 'user_id': str(data.user_id), 'session_id': str(data.session_id)}
                 session = CassandraSession(session_id, initial=session_data)
-                app.logger.debug(f'Session opened with session_id: {session_id}')
+                app.logger.debug(f'Session opened with session_id: {session_id}, user_id: {data.user_id}')
                 return session
 
         session_id = str(uuid.uuid4())
         app.logger.debug(f'New session created with session_id: {session_id}')
         return CassandraSession(session_id)
+
 
     def save_session(self, app, session, response):
         # Skip saving session for OPTIONS requests
@@ -54,8 +55,10 @@ class CassandraSessionInterface(SessionInterface):
         session_id = session.get('session_id')
         
         if not session_id:
-            app.logger.error(f"Session ID is missing; unable to save session")
-            return
+            # Generate a new session ID if missing
+            session_id = str(uuid.uuid4())
+            session['session_id'] = session_id  # Set session ID in session data
+            app.logger.info(f"Generated new session ID: {session_id}")
 
         user_email = session.get('user_email')
         user_id = session.get('user_id')
@@ -92,14 +95,14 @@ class CassandraSessionInterface(SessionInterface):
                 now, now, expire_at, data
             ))
 
-            # Only set the cookie if it hasn't been set already
+            # Set the cookie if it hasn't been set already
             if 'Set-Cookie' not in response.headers:
                 response.set_cookie(
                     app.config.get('SESSION_COOKIE_NAME', 'session_id'), 
                     session_id, 
                     httponly=True, 
                     secure=False,  # Temporarily set to False for local development
-                    samesite='None', 
+                    samesite='Lax', 
                     path="/"
                 )
             else:
@@ -107,3 +110,4 @@ class CassandraSessionInterface(SessionInterface):
                 
         except Exception as e:
             app.logger.error(f"Error saving session: {e}")
+

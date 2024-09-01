@@ -6,11 +6,10 @@
 # Properties:
 #    [+] name - The name of the user.
 #    [+] email - The email address of the user.
-#    [+] password - The hashed password of the user.
 #    [+] user_id - The unique identifier for the user.
 #    [+] session_id - The current session identifier associated with the user.
 # Methods: 
-#    [+] __init__(self, name, email, password, user_id, session_id=None): Initializes a new User instance with the provided details.
+#    [+] __init__(self, name, email, user_id, session_id=None): Initializes a new User instance with the provided details.
 #    [+] get_id(self): Returns the user_id of the user as a string.
 #    [+] to_dict(self): Returns the user's details as a dictionary.
 #    [+] register(cls, data): Registers a new user in the system and stores the user details in Cassandra.
@@ -19,6 +18,7 @@
 #    [+] check_session(cls, session_id): Verifies if a session with the given session_id is still active.
 #    [+] logout(cls, session_id): Logs out a user by deleting their session from Cassandra.
 #    [+] get(cls, user_id): Retrieves a user's details from Cassandra using their user_id.
+#    [+] update(cls, user_id, name=None, surname=None, location=None, profile_picture=None): Updates a user's profile details in the database.
 
 from cassandra.cluster import Cluster
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -33,10 +33,9 @@ cluster = Cluster(['143.42.34.42'])
 cassandra_session = cluster.connect('trustsphere')
 
 class User(UserMixin):
-    def __init__(self, email, password, user_id, session_id=None):
-        self.name = "name"
+    def __init__(self, name, email, user_id, session_id=None):
+        self.name = name  # Ensure name is set correctly
         self.email = email
-        self.password = password
         self.user_id = user_id
         self.session_id = session_id
 
@@ -59,10 +58,14 @@ class User(UserMixin):
         user_id = uuid.uuid4()
         logging.info(f'Registering user with user_id: {user_id}')
 
-        query = "INSERT INTO users (user_id, email, name, password) VALUES (%s, %s, %s, %s)"
-        cassandra_session.execute(query, (user_id, email, name, password))
+        query = "INSERT INTO user_credentials (user_id, email, password) VALUES (%s, %s, %s)"
+        cassandra_session.execute(query, (user_id, email, password))
 
-        return cls(name, email, password, user_id)
+        # Store profile data in users table
+        query = "INSERT INTO users (user_id, email, name) VALUES (%s, %s, %s)"
+        cassandra_session.execute(query, (user_id, email, name))
+
+        return cls(name, email, user_id)
 
     @classmethod
     def login(cls, data):
@@ -70,27 +73,41 @@ class User(UserMixin):
         password = data['password']
         logging.info(f'Attempting login for email: {email}')
 
-        query = "SELECT * FROM user_credentials WHERE email = %s ALLOW FILTERING"
-        rows = cassandra_session.execute(query, (email,))
+        try:
+            # Fetch user credentials
+            query = "SELECT * FROM user_credentials WHERE email = %s ALLOW FILTERING"
+            rows = cassandra_session.execute(query, (email,))
 
-        for row in rows:
-            if check_password_hash(row.password, password):
-                # now querying user_credentials instead of users, new table has no name field so we'll have to pull it from users in a separate query if needed.
-                #user = cls(row.name, row.email, row.password, row.user_id)
-                user = cls(row.email, row.password, row.user_id)
-                
-                # Get existing session ID, if any
-                existing_session_id = cls.get_existing_session(user.user_id)
-                if existing_session_id:
-                    user.session_id = str(existing_session_id)
-                else:
-                    user.session_id = None  # Set to None so that the session is handled by login.py
+            for row in rows:
+                if check_password_hash(row.password, password):
+                    # Fetch additional user details like name
+                    user_details_query = "SELECT user_id, name FROM users WHERE user_id = %s"
+                    user_details = cassandra_session.execute(user_details_query, (row.user_id,)).one()
 
-                logging.info(f'User logged in with session_id: {user.session_id}')
-                return user
-        
-        logging.error('Invalid email or password')
-        return None
+                    if user_details:
+                        # Create User instance with all required fields
+                        user = cls(name=user_details.name, email=row.email, user_id=row.user_id)
+
+                        # Get existing session ID, if any
+                        existing_session_id = cls.get_existing_session(user.user_id)
+                        if existing_session_id:
+                            user.session_id = str(existing_session_id)
+                        else:
+                            user.session_id = None  # Set to None so that the session is handled by login.py
+
+                        logging.info(f'User logged in with session_id: {user.session_id}')
+                        return user
+                    else:
+                        logging.error('User details not found in the users table')
+                        return None
+            
+            logging.error('Invalid email or password')
+            return None
+
+        except Exception as e:
+            logging.error(f'Error during login: {e}')
+            return None
+
 
     @classmethod
     def get_existing_session(cls, user_id):
@@ -102,49 +119,99 @@ class User(UserMixin):
         
         return None
 
+    # Example of how to check and handle user_id correctly
+
     @classmethod
     def check_session(cls, session_id):
-        logging.info(f'Checking session with session_id: {session_id}')
-        query = "SELECT * FROM sessions WHERE session_id = %s"
-        rows = cassandra_session.execute(query, (uuid.UUID(session_id),))
+        try:
+            logging.info(f'Checking session with session_id: {session_id}')
+            query = "SELECT * FROM sessions WHERE session_id = %s"
+            rows = cassandra_session.execute(query, (uuid.UUID(session_id),))
 
-        for row in rows:
-            if row.expire_at > datetime.utcnow():
-                logging.info(f'Session is active for session_id: {session_id}')
-                return True
-        logging.error(f'Session is inactive for session_id: {session_id}')
-        return False
+            for row in rows:
+                if row.expire_at > datetime.utcnow():
+                    logging.info(f'Session is active for session_id: {session_id}')
+                    if isinstance(row.user_id, uuid.UUID):  # Ensure user_id is a UUID
+                        return row.user_id
+                    else:
+                        logging.error(f"Invalid user_id found: {row.user_id}")
+                        return None
+            logging.error(f'Session is inactive or expired for session_id: {session_id}')
+            return None
+        except Exception as e:
+            logging.error(f'Error during session check: {e}')
+            return None
+
+
+
+
 
     @classmethod
     def logout(cls, session_id):
         try:
-            # Debug: Print the session ID to ensure it's correct
             logging.info(f'Logging out session with session_id: {session_id}')
-
-            # Convert the session_id to a UUID object
             session_uuid = uuid.UUID(session_id)
-
-            # Query to delete the session
             query = "DELETE FROM sessions WHERE session_id = %s"
-
-            # Execute the delete query
             result = cassandra_session.execute(query, (session_uuid,))
-
-            # Debug: Check if the deletion was successful
             logging.info(f'Session with session_id {session_id} has been deleted. Result: {result}')
-
         except Exception as e:
             logging.error(f'Error during logout: {e}')
 
 
+
     @classmethod
     def get(cls, user_id):
-        logging.info(f'Fetching user with user_id: {user_id}')
-        query = "SELECT * FROM users WHERE user_id = %s"
-        rows = cassandra_session.execute(query, (uuid.UUID(user_id),))
+        if not isinstance(user_id, uuid.UUID):
+            logging.error(f'Invalid user_id type: {type(user_id)}, value: {user_id}')
+            return None
 
-        for row in rows:
-            return cls(row.name, row.email, row.password, row.user_id)
+        try:
+            logging.info(f'user.py: Fetching user with user_id: {user_id}')
+            query = "SELECT user_id, email, name, surname, location, profile_picture FROM users WHERE user_id = %s"
+            rows = cassandra_session.execute(query, (user_id,))
 
-        logging.error(f'User not found with user_id: {user_id}')
-        return None
+            for row in rows:
+                return cls(name=row.name, email=row.email, user_id=row.user_id)
+
+            logging.error(f'User not found with user_id: {user_id}')
+            return None
+        except Exception as e:
+            logging.error(f'Error fetching user: {e}')
+            return None
+
+
+    @classmethod
+    def update(cls, user_id, name=None, surname=None, location=None, profile_picture=None):
+        logging.info(f'Updating user with user_id: {user_id}')
+        
+        # Construct the update query dynamically based on which fields are provided
+        update_fields = []
+        update_values = []
+        
+        if name:
+            update_fields.append("name = %s")
+            update_values.append(name)
+        if surname:
+            update_fields.append("surname = %s")
+            update_values.append(surname)
+        if location:
+            update_fields.append("location = %s")
+            update_values.append(location)
+        if profile_picture:
+            update_fields.append("profile_picture = %s")
+            update_values.append(profile_picture)
+        
+        if not update_fields:
+            logging.error('No fields provided to update')
+            return None
+
+        update_values.append(uuid.UUID(user_id))
+
+        query = f"UPDATE users SET {', '.join(update_fields)} WHERE user_id = %s"
+        
+        try:
+            cassandra_session.execute(query, tuple(update_values))
+            return cls.get(user_id)  # Return the updated user object
+        except Exception as e:
+            logging.error(f'Failed to update user profile: {e}')
+            return None

@@ -41,25 +41,23 @@ def login():
         logger.debug(f"Response headers for OPTIONS: {response.headers}")
         return response, 200
 
-    # Handle the actual login (POST) request
     try:
         data = request.get_json()
         logger.debug(f'Login data received: {data}')
         user = User.login(data)
         if user:
-            # Generate a session ID if it doesn't already exist
+            # Generate or retrieve the session ID
             session_id = user.session_id or str(uuid.uuid4())
             session['session_id'] = session_id
-            
             user.session_id = session_id
-
-            response = make_response(jsonify({'message': 'User logged in successfully', 'data': user.to_dict()}))
 
             # Set session data
             session['user_email'] = user.email
-            session['user_id'] = user.user_id
+            session['user_id'] = str(user.user_id)  # Ensure user_id is a string
 
-            # Save session using the globally defined `cassandra_session_interface`
+            response = make_response(jsonify({'message': 'User logged in successfully', 'data': user.to_dict()}))
+
+            # Save the session
             cassandra_session_interface.save_session(current_app, session, response)
 
             logger.debug(f'Session ID set in cookie: {session_id}')
@@ -79,6 +77,7 @@ def login():
         response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response, 500
+
 
 def logout():
     if request.method == 'OPTIONS':
@@ -145,8 +144,9 @@ def check_session():
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
                 return response, 200  # Return 200 even if the session is inactive
 
-            if User.check_session(session_id):
-                user = current_user if current_user.is_authenticated else User.get(session_id)  # Load the user
+            user_id = User.check_session(session_id)
+            if user_id:
+                user = User.get(user_id)  # Load the user details using user_id
                 response = jsonify({'status': 'active', 'user_id': user.get_id() if user else None})
                 response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
                 response.headers.add('Access-Control-Allow-Credentials', 'true')
@@ -164,6 +164,9 @@ def check_session():
             response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
             response.headers.add('Access-Control-Allow-Credentials', 'true')
             return response, 500
+
+
+
 
 
 

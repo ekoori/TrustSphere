@@ -35,7 +35,10 @@ const UserLogin = () => {
         console.log('Login response:', response.data);
         if (response.status === 200 && response.data && response.data.data) {
             setIsLoggedIn(true);  // Set isLoggedIn to true in context
-            setUserId(response.data.user_id);  // Set userId in context
+            setUserId(response.data.data.user_id);  // Set userId in context
+            //console.log('setUserId function:', setUserId);  // Should not be undefined or null
+            //console.log('Login response user_id:', response.data.data.user_id);
+
             navigate('/'); // Redirect to home page after successful login
         } else {
             console.error('Login failed:', response.data.message);

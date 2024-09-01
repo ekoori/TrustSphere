@@ -12,7 +12,8 @@
 
 import React, { useState, useEffect } from 'react';
 import '../styles/Profile.css';
-import { useLogin } from '../App';  // Assuming you have a useLogin hook from your context
+import { useLogin } from '../App';
+import api from '../api';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,19 +29,33 @@ const ProfilePage = () => {
     projects: ['OpenAI Datacenter Expansion', 'Community Garden Initiative'],
     following: ['Elon Musk', 'Joe Rogan']
   });
-  
+
   const { isLoggedIn, userId } = useLogin();  // Use login context to get login status
 
   useEffect(() => {
     if (isLoggedIn) {
-      // When the user is logged in, fetch or modify the profile data to only show name and email
-      setProfileData(prevData => ({
-        name: prevData.name,
-        email: prevData.email,
-        image: 'static/user-image.jpg'
-      }));
+      api.get('api/user', { withCredentials: true })
+        .then(response => {
+          const data = response.data;
+          setProfileData({
+            name: data.name || 'N/A',
+            email: data.email || 'N/A',
+            location: data.location || 'N/A',
+            joined: 'January 2023',  // This should be retrieved from backend if available
+            image: data.profile_picture || 'static/user-image.jpg',
+            values: data.values || ['#community', '#technology', '#sustainability'],
+            spheres: data.spheres || ['AI Development Sphere', 'Renewable Energy Sphere'],
+            unions: data.unions || ['Tech Union', 'AI Enthusiasts Union'],
+            projects: data.projects || ['OpenAI Datacenter Expansion', 'Community Garden Initiative'],
+            following: data.following || ['Elon Musk', 'Joe Rogan']
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+          // Optionally handle error, e.g., show a message to the user
+        });
     } else {
-      // When not logged in, set full profile data
+      // When not logged in, retain mockup data
       setProfileData({
         name: 'Sam Altman',
         email: 'sam.altman@example.com',
@@ -74,7 +89,16 @@ const ProfilePage = () => {
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
-    setIsEditing(false);
+
+    api.post('/api/updateuser', profileData, { withCredentials: true })
+      .then(response => {
+        setProfileData(response.data);
+        setIsEditing(false);
+      })
+      .catch(error => {
+        console.error('Error saving user data:', error);
+        // Optionally handle error, e.g., show a message to the user
+      });
   };
 
   return (

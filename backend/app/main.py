@@ -13,16 +13,17 @@
 #    [+] internal_error(error): Custom error handler for 500 Internal Server Error.
 #    [x] app.run(): The application is not currently configured to run inside a WSGI container. It can be started using this method in a development environment.
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_login import LoginManager
 import logging
 from datetime import timedelta
 from routes.cassandra import CassandraSessionInterface  # Import the custom session interface
 from routes.login import load_user, login, logout, check_session
-from routes.profile import get_user
+from routes.profile import get_user, update_user
 from routes.registration import register
 from routes.trusttrail import get_trusttrail, add_transaction
+from models.user import User
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)  # Increased to DEBUG level for more detailed logs
@@ -34,10 +35,25 @@ app.config['SESSION_COOKIE_NAME'] = 'session_id'  # Explicitly define the sessio
 
 # Enable CORS for all routes before defining any routes
 CORS(app, resources={r"/api/*": {
-    "origins": ["https://localhost:3000", "https://143.42.34.42:3000"],  # Update these to match your HTTPS frontend
+    "origins": ["http://localhost:3000", "http://143.42.34.42:3000"],  # Update these to match your HTTPS frontend
     "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "session_id"],
     "supports_credentials": True
 }})
+
+
+# Handle CORS Preflight Requests Globally
+@app.before_request
+def handle_options_request():
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        origin = request.headers.get('Origin')
+        if origin in ['http://143.42.34.42:3000', 'http://localhost:3000']:
+            response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        return response
+
 
 # Set up the custom Cassandra session interface
 app.session_interface = CassandraSessionInterface(
@@ -51,14 +67,16 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    logger.info(f'Loading user with user_id: {user_id}')
-    return User.get(user_id)
+    logging.info(f'Loading user with user_id: {user_id}')
+    return User.get(user_id)  # Ensure this fetches the user by user_id
+
 
 # Route definitions
 app.add_url_rule('/api/login', view_func=login, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/logout', view_func=logout, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/check_session', view_func=check_session, methods=['POST', 'GET', 'OPTIONS'])
-app.add_url_rule('/api/user', view_func=get_user, methods=['GET', 'POST'])
+app.add_url_rule('/api/user', view_func=get_user, methods=['GET', 'OPTIONS'])
+app.add_url_rule('/api/updateuser', view_func=update_user, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/register', view_func=register, methods=['POST'])
 app.add_url_rule('/api/trusttrail', view_func=get_trusttrail, methods=['GET', 'POST', 'OPTIONS'])
 app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, methods=['POST', 'OPTIONS'])

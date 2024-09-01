@@ -69,8 +69,6 @@ function LoginProvider({ children }) {
             alert('Error during logout: ' + error.message);
         }
     };
-    
-    
 
     const checkSession = useCallback(async () => {
         try {
@@ -82,17 +80,21 @@ function LoginProvider({ children }) {
                 setIsLoggedIn(true);
                 setUserId(response.data.user_id);
             } else {
-                console.log('No active session found');
+                console.log('No active session found or user not found');
                 setIsLoggedIn(false);
                 setUserId(null);
             }
         } catch (error) {
-            console.info('No active session or error checking session:', error);
-            setIsLoggedIn(false);
-            setUserId(null);
+            if (error.response && error.response.status === 500) {
+                console.error('Internal Server Error while checking session:', error);
+                alert('An internal server error occurred while checking your session. Please try again later.');
+            } else {
+                console.info('No active session or error checking session:', error);
+                setIsLoggedIn(false);
+                setUserId(null);
+            }
         }
     }, []);
-    
     
 
     useEffect(() => {
