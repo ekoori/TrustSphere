@@ -10,7 +10,7 @@ Our purpose is to redefine how we engage with the economy and democracy. TrustSp
 
 - **Trust-Based Transactions**: Encouraging interactions based on trust, respect, and mutual support. 
 - **Gift Economy**: Promoting a culture of giving, where goods and services are given without any explicit agreement for immediate or future rewards.
-- **Liquid Democracy**: Striving for a democratic system where the power is in the hands of the many, not the few. 
+- **Liquid Democracy**: Striving for a democratic system where the power is in the hands of the many, the contributors, not the few. 
 - **Transparency**: Ensuring that all transactions and decisions are made visible, fostering accountability and trust among users.
 - **Community Empowerment**: Giving communities the tools they need to organize, share resources, and make collective decisions that benefit all members.
 
@@ -23,8 +23,8 @@ Our purpose is to redefine how we engage with the economy and democracy. TrustSp
 - Union - is essentially a group of users who come together for a common purpose or to manage collective activities.
 - Sphere - represents a broader community which might consist of individual users, unions, and projects that share common values or geographic ties.
 - Project - Projects within TrustSphere are collaborative efforts where both individuals and companies can contribute. Each project is led by a mission and governed by a specific set of policies, which can be dynamically adjusted by users possessing the appropriate authority.
-- Value graph - is a structured representation of the values associated with a profile, company, or project. It leverages a sophisticated algorithm to facilitate matches across the network and is crucial for generating relevant statistical data. The platform provides a user-friendly Value Graph Creation Wizard to aid users in establishing their Value Graphs.
-- Offers/Requests - Users and companies can post offers or requests on TrustSphere’s marketplace. This functionality enables users to state what they can provide or need, allowing for efficient resource matching within the community.
+- Value graph - is a structured representation of the values associated with a profile, union, or project. It leverages a sophisticated algorithm to facilitate matches across the network and is crucial for generating relevant statistical data. The platform provides a user-friendly Value Graph Creation Wizard to aid users in establishing their Value Graphs.
+- Offers/Requests - Users and unions can post offers or requests on TrustSphere’s marketplace. This functionality enables users to state what they can provide or need, allowing for efficient resource matching within the community.
 - Marketplace - The marketplace in TrustSphere acts as the central hub where offers and requests are exchanged, fostering an environment of support and mutual benefit.
 - Project Management and Voting Panel - TrustSphere supports hierarchies within companies, enabling appropriate delegation of voting rights and decision-making powers. Issues within the platform can be democratically voted upon, with results potentially influencing changes in project direction or organizational structure.
 - Issue can be voted on, issue (result) can be linked to the delegation commands in TrustSphere, or changes in hierarchy
