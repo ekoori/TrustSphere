@@ -1,6 +1,32 @@
 
 CREATE KEYSPACE trustsphere WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
 
+CREATE TABLE trustsphere.audit_log (
+    id uuid PRIMARY KEY,
+    action_type text,
+    description text,
+    executed_at timestamp,
+    executed_by uuid,
+    transaction_id uuid,
+    user_id uuid
+) WITH additional_write_policy = '99p'
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND default_time_to_live = 0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
 CREATE TABLE trustsphere.comment_likes (
     transaction_id uuid,
     comment_type text,
@@ -121,7 +147,9 @@ CREATE TABLE trustsphere.sessions (
     creation_time timestamp,
     expire_at timestamp,
     last_access_time timestamp,
-    user_email text
+    user_email text,
+    user_id uuid,
+    data map<text, text>
 ) WITH additional_write_policy = '99p'
     AND bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
@@ -146,6 +174,8 @@ CREATE TABLE trustsphere.trusttrail (
     gratitude_comment text,
     gratitude_comment_id uuid,
     gratitude_comment_timestamp timestamp,
+    last_modified_at timestamp,
+    last_modified_by uuid,
     other_comment text,
     other_comment_author_id uuid,
     other_comment_author_name text,
@@ -161,6 +191,7 @@ CREATE TABLE trustsphere.trusttrail (
     user_comment text,
     user_comment_id uuid,
     user_comment_timestamp timestamp,
+    validation_flags text,
     PRIMARY KEY (user_id, transaction_id)
 ) WITH CLUSTERING ORDER BY (transaction_id DESC)
     AND additional_write_policy = '99p'
@@ -181,14 +212,66 @@ CREATE TABLE trustsphere.trusttrail (
     AND read_repair = 'BLOCKING'
     AND speculative_retry = '99p';
 
+CREATE INDEX trusttrail_other_user_id_idx ON trustsphere.trusttrail (other_user_id);
+
+CREATE INDEX trusttrail_project_id_idx ON trustsphere.trusttrail (project_id);
+
+CREATE INDEX trusttrail_transaction_status_idx ON trustsphere.trusttrail (transaction_status);
+
+CREATE MATERIALIZED VIEW trustsphere.vw_trusttrail_summary AS
+    SELECT user_id, transaction_id, transaction_status, project_id
+    FROM trustsphere.trusttrail
+    WHERE user_id IS NOT NULL AND project_id IS NOT NULL AND transaction_status IS NOT NULL AND transaction_id IS NOT NULL
+    PRIMARY KEY ((user_id, transaction_id), transaction_status)
+ WITH CLUSTERING ORDER BY (transaction_status ASC)
+    AND additional_write_policy = '99p'
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
+CREATE TABLE trustsphere.user_credentials (
+    user_id uuid PRIMARY KEY,
+    email text,
+    password text
+) WITH additional_write_policy = '99p'
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND cdc = false
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '16', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND memtable = 'default'
+    AND crc_check_chance = 1.0
+    AND default_time_to_live = 0
+    AND extensions = {}
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair = 'BLOCKING'
+    AND speculative_retry = '99p';
+
 CREATE TABLE trustsphere.users (
     user_id uuid PRIMARY KEY,
     email text,
+    joined_datetime timestamp,
     location text,
     name text,
-    password text,
-    profile_picture text,
-    surname text
+    profile_picture blob,
+    surname text,
+    valuegraph_id uuid
 ) WITH additional_write_policy = '99p'
     AND bloom_filter_fp_chance = 0.01
     AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}

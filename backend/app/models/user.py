@@ -20,12 +20,14 @@
 #    [+] get(cls, user_id): Retrieves a user's details from Cassandra using their user_id.
 #    [+] update(cls, user_id, name=None, surname=None, location=None, profile_picture=None): Updates a user's profile details in the database.
 
+
+
+
 from cassandra.cluster import Cluster
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import uuid
 import logging
-from routes.cassandra import CassandraSessionInterface  # Correct import
 from datetime import datetime, timedelta
 
 # Set up Cassandra session
@@ -34,7 +36,7 @@ cassandra_session = cluster.connect('trustsphere')
 
 class User(UserMixin):
     def __init__(self, name, email, user_id, session_id=None):
-        self.name = name  # Ensure name is set correctly
+        self.name = name
         self.email = email
         self.user_id = user_id
         self.session_id = session_id
@@ -93,7 +95,7 @@ class User(UserMixin):
                         if existing_session_id:
                             user.session_id = str(existing_session_id)
                         else:
-                            user.session_id = None  # Set to None so that the session is handled by login.py
+                            user.session_id = None
 
                         logging.info(f'User logged in with session_id: {user.session_id}')
                         return user
@@ -108,7 +110,6 @@ class User(UserMixin):
             logging.error(f'Error during login: {e}')
             return None
 
-
     @classmethod
     def get_existing_session(cls, user_id):
         query = "SELECT session_id FROM sessions WHERE user_id = %s AND expire_at > %s ALLOW FILTERING"
@@ -118,8 +119,6 @@ class User(UserMixin):
             return row.session_id
         
         return None
-
-    # Example of how to check and handle user_id correctly
 
     @classmethod
     def check_session(cls, session_id):
@@ -131,7 +130,7 @@ class User(UserMixin):
             for row in rows:
                 if row.expire_at > datetime.utcnow():
                     logging.info(f'Session is active for session_id: {session_id}')
-                    if isinstance(row.user_id, uuid.UUID):  # Ensure user_id is a UUID
+                    if isinstance(row.user_id, uuid.UUID):
                         return row.user_id
                     else:
                         logging.error(f"Invalid user_id found: {row.user_id}")
@@ -141,10 +140,6 @@ class User(UserMixin):
         except Exception as e:
             logging.error(f'Error during session check: {e}')
             return None
-
-
-
-
 
     @classmethod
     def logout(cls, session_id):
@@ -156,8 +151,6 @@ class User(UserMixin):
             logging.info(f'Session with session_id {session_id} has been deleted. Result: {result}')
         except Exception as e:
             logging.error(f'Error during logout: {e}')
-
-
 
     @classmethod
     def get(cls, user_id):
@@ -179,7 +172,6 @@ class User(UserMixin):
             logging.error(f'Error fetching user: {e}')
             return None
 
-
     @classmethod
     def update(cls, user_id, name=None, surname=None, location=None, profile_picture=None):
         logging.info(f'Updating user with user_id: {user_id}')
@@ -198,8 +190,10 @@ class User(UserMixin):
             update_fields.append("location = %s")
             update_values.append(location)
         if profile_picture:
+            # Convert profile picture to blob
+            profile_picture_blob = profile_picture.encode('utf-8')
             update_fields.append("profile_picture = %s")
-            update_values.append(profile_picture)
+            update_values.append(profile_picture_blob)
         
         if not update_fields:
             logging.error('No fields provided to update')

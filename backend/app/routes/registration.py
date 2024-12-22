@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 
 #from flask import current_app as app
-from models.user import User
+from app.models.user import User
 
 registration = Blueprint('registration', __name__)
 

@@ -5,63 +5,80 @@
 #    [+] update_user(): Handles the update of user profile data using the User model's update method.
 
 import logging
-from flask import request, jsonify
-from models.user import User
-from flask import current_app as app
-from flask import request, jsonify, session  # Add session to the import
-from flask_login import login_user, logout_user, login_required, current_user, AnonymousUserMixin
+from flask import request, jsonify, current_app as app
+from app.models.user import User
+from app.middleware.session_middleware import validate_session
 
+logger = logging.getLogger(__name__)
 
-@login_required
-def get_user():
+@validate_session
+def get_user(user_id=None):
     if request.method == 'OPTIONS':
         response = app.make_default_options_response()
-        response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin'))
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response, 200
-    
-    # Correctly retrieve user_id from session
-    user_id = session.get('user_id')
-    session_id = session.get('session_id')
-    print(f"Invalid user_id: {user_id} for session_id: {session_id}")
-    if not user_id:
-        logging.error(f"Invalid user_id: {user_id} for session_id: {session_id}")
-        return jsonify({'message': 'Invalid session or user not found'}), 401
 
-    logging.info(f'profile.py: Fetching user with user_id: {user_id}')
-    user = User.get(user_id)
-    
-    if user:
-        return jsonify(user.to_dict()), 200
-    else:
-        logging.error(f'User not found with user_id: {user_id}')
-        return jsonify({'message': 'User not found'}), 404
+    try:
+        logger.info(f"Fetching user data for user_id: {user_id}")
+        
+        # Get user data
+        user = User.get(user_id)
+        if user:
+            user_data = user.to_dict()
+            logger.info(f"Successfully retrieved user data for user_id: {user_id}")
+            
+            response = jsonify(user_data)
+            return response, 200
+        else:
+            logger.error(f'User not found with user_id: {user_id}')
+            response = jsonify({'message': 'User not found'})
+            return response, 404
 
+    except Exception as e:
+        logger.error(f"Error in get_user: {str(e)}")
+        response = jsonify({'message': 'Internal server error'})
+        return response, 500
 
+@validate_session
+def update_user(user_id=None):
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        return response, 200
 
+    try:
+        data = request.get_json()
+        logger.debug(f"Received update data: {data}")
+        if not data:
+            logger.error("No data provided for update")
+            response = jsonify({'message': 'No data provided'})
+            return response, 400
 
+        logger.info(f"Updating user profile for user_id: {user_id}")
+        
+        # Extract fields from the request data
+        name = data.get('name')
+        surname = data.get('surname')
+        location = data.get('location')
+        profile_picture = data.get('profile_picture')
 
+        # Update user profile
+        updated_user = User.update(
+            str(user_id),
+            name=name,
+            surname=surname,
+            location=location,
+            profile_picture=profile_picture
+        )
+        
+        if updated_user:
+            logger.info(f"Successfully updated profile for user_id: {user_id}")
+            response = jsonify(updated_user.to_dict())
+            return response, 200
+        else:
+            logger.error(f"Failed to update profile for user_id: {user_id}")
+            response = jsonify({'message': 'Failed to update user profile'})
+            return response, 400
 
-def update_user():
-    data = request.get_json()
-    user_id = current_user.get_id()
-
-    if user_id is None:
-        return jsonify({'message': 'Invalid user_id'}), 400
-
-    # Extract fields from the request data
-    name = data.get('name')
-    surname = data.get('surname')
-    location = data.get('location')
-    profile_picture = data.get('profile_picture')
-
-    # Call the update method in User model
-    updated_user = User.update(user_id, name=name, surname=surname, location=location, profile_picture=profile_picture)
-    
-    if updated_user:
-        return jsonify(updated_user.to_dict()), 200
-    else:
-        return jsonify({'message': 'Failed to update user profile'}), 400
-
+    except Exception as e:
+        logger.error(f"Error in update_user: {str(e)}")
+        response = jsonify({'message': 'Internal server error'})
+        return response, 500

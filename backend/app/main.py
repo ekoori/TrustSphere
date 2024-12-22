@@ -18,49 +18,83 @@ from flask_cors import CORS
 from flask_login import LoginManager
 import logging
 from datetime import timedelta
-from routes.cassandra import CassandraSessionInterface  # Import the custom session interface
-from routes.login import load_user, login, logout, check_session
-from routes.profile import get_user, update_user
-from routes.registration import register
-from routes.trusttrail import get_trusttrail, add_transaction
-from models.user import User
+
+from app.routes.cassandra import CassandraSessionInterface
+from app.routes.login import login, logout, check_session, load_user
+from app.routes.profile import get_user, update_user
+from app.routes.registration import register
+from app.routes.trusttrail import get_trusttrail, add_transaction
+from app.models.user import User
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)  # Increased to DEBUG level for more detailed logs
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+print("Python path:")
+import sys
+for path in sys.path:
+    print(path)
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key'  # Replace with your actual secret key
-app.config['SESSION_COOKIE_NAME'] = 'session_id'  # Explicitly define the session cookie name
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SESSION_COOKIE_NAME'] = 'session_id'
+
+
+app.config.update(
+    SESSION_COOKIE_SECURE=False,  # Set to True in production
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_COOKIE_NAME='session_id',
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=24)
+)
+
+
+
+# Initialize session interface
+session_interface = CassandraSessionInterface(
+    cluster_nodes=['143.42.34.42'],
+    keyspace='trustsphere',
+    session_lifetime=timedelta(hours=24)
+)
+app.session_interface = session_interface   
+
 
 # Enable CORS for all routes before defining any routes
 CORS(app, resources={r"/api/*": {
-    "origins": ["http://localhost:3000", "http://143.42.34.42:3000"],  # Update these to match your HTTPS frontend
+    "origins": ["http://localhost:3000", "http://143.42.34.42:3000"],
     "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "session_id"],
-    "supports_credentials": True
+    "expose_headers": ["Content-Type", "Authorization", "session_id"],
+    "supports_credentials": True,
+    "allow_credentials": True,
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }})
 
 
-# Handle CORS Preflight Requests Globally
 @app.before_request
-def handle_options_request():
-    if request.method == 'OPTIONS':
+def handle_preflight():
+    if request.method == "OPTIONS":
         response = app.make_default_options_response()
-        origin = request.headers.get('Origin')
-        if origin in ['http://143.42.34.42:3000', 'http://localhost:3000']:
-            response.headers['Access-Control-Allow-Origin'] = origin
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization, session_id')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
         response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers.add('Access-Control-Max-Age', '3600')
+        origin = request.headers.get('Origin')
+        if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+            response.headers['Access-Control-Allow-Origin'] = origin
         return response
 
+@app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization, session_id')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        response.headers.add('Access-Control-Expose-Headers', 'Content-Type, Authorization, session_id')
+    return response
 
-# Set up the custom Cassandra session interface
-app.session_interface = CassandraSessionInterface(
-    cluster_nodes=['143.42.34.42'],  # Replace with your Cassandra nodes
-    keyspace='trustsphere',  # Replace with your keyspace name
-    session_lifetime=timedelta(hours=24)  # Set session lifetime
-)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -68,8 +102,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     logging.info(f'Loading user with user_id: {user_id}')
-    return User.get(user_id)  # Ensure this fetches the user by user_id
-
+    return User.get(user_id)
 
 # Route definitions
 app.add_url_rule('/api/login', view_func=login, methods=['POST', 'OPTIONS'])
@@ -85,8 +118,10 @@ app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, m
 def internal_error(error):
     response = jsonify({"error": "Internal Server Error"})
     response.status_code = 500
-    response.headers.add('Access-Control-Allow-Origin', '*')  # Adjust to allow specific origins if needed
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    origin = request.headers.get('Origin')
+    if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 
 if __name__ == '__main__':
