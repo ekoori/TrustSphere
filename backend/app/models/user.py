@@ -31,7 +31,7 @@ import logging
 from datetime import datetime, timedelta
 
 # Set up Cassandra session
-cluster = Cluster(['143.42.34.42'])
+cluster = Cluster(['172.18.0.2'])
 cassandra_session = cluster.connect('trustsphere')
 
 class User(UserMixin):

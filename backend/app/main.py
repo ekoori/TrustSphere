@@ -52,7 +52,7 @@ app.config.update(
 
 # Initialize session interface
 session_interface = CassandraSessionInterface(
-    cluster_nodes=['143.42.34.42'],
+    cluster_nodes=['172.18.0.2'],
     keyspace='trustsphere',
     session_lifetime=timedelta(hours=24)
 )
@@ -61,7 +61,7 @@ app.session_interface = session_interface
 
 # Enable CORS for all routes before defining any routes
 CORS(app, resources={r"/api/*": {
-    "origins": ["http://localhost:3000", "http://143.42.34.42:3000"],
+    "origins": ["http://localhost:3000", "http://172.236.35.144:3000"],
     "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "session_id"],
     "expose_headers": ["Content-Type", "Authorization", "session_id"],
     "supports_credentials": True,
@@ -79,14 +79,14 @@ def handle_preflight():
         response.headers['Access-Control-Allow-Credentials'] = 'true'
         response.headers.add('Access-Control-Max-Age', '3600')
         origin = request.headers.get('Origin')
-        if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+        if origin in ['http://localhost:3000', 'http://172.236.35.144:3000']:
             response.headers['Access-Control-Allow-Origin'] = origin
         return response
 
 @app.after_request
 def after_request(response):
     origin = request.headers.get('Origin')
-    if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+    if origin in ['http://localhost:3000', 'http://172.236.35.144:3000']:
         response.headers['Access-Control-Allow-Origin'] = origin
         response.headers['Access-Control-Allow-Credentials'] = 'true'
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization, session_id')
@@ -119,13 +119,13 @@ def internal_error(error):
     response = jsonify({"error": "Internal Server Error"})
     response.status_code = 500
     origin = request.headers.get('Origin')
-    if origin in ['http://localhost:3000', 'http://143.42.34.42:3000']:
+    if origin in ['http://localhost:3000', 'http://172.236.35.144:3000']:
         response.headers.add('Access-Control-Allow-Origin', origin)
         response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
 
 if __name__ == '__main__':
-    context = ('/home/igor/TS02/backend/app/localhost.crt', '/home/igor/TS02/backend/app/localhost.key') 
+    context = ('/home/igor/TrustSphere/backend/app/localhost.crt', '/home/igor/TrustSphere/backend/app/localhost.key') 
     with app.app_context():
         #app.run(debug=True, ssl_context=context, host="0.0.0.0")
         app.run(debug=True, host="0.0.0.0")

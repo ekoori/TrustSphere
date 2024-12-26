@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    hostname: cassandra
+    networks:
+      - cassandra-network
+    ports:
+      - "9042:9042"  # Expose Cassandra's port
+    volumes:
+      - cassandra_data:/var/lib/cassandra  # Persistent data storage
+      - ./cassandra.yaml:/etc/cassandra/cassandra.yaml  # Custom configuration
+    environment:
+      - CASSANDRA_CLUSTER_NAME=DevCluster
+    restart: always  # Automatically restart on system reboot or failure
+
+  schema-setup:
+    image: nuvo/docker-cqlsh
+    container_name: cassandra-schema
+    depends_on:
+      - cassandra
+    networks:
+      - cassandra-network
+    volumes:
+      - ./schema.cql:/scripts/data.cql  # Schema file
+    environment:
+      - CQLSH_HOST=cassandra
+      - CQLSH_PORT=9042
+      - CQLVERSION=3.4.7
+    entrypoint: ["cqlsh", "--cqlversion=3.4.7", "-f", "/scripts/data.cql"]
+    restart: "no"  # Runs once to apply the schema
+
+  cqlsh:
+    image: nuvo/docker-cqlsh
+    container_name: cassandra-cli
+    networks:
+      - cassandra-network
+    environment:
+      - CQLSH_HOST=cassandra
+      - CQLSH_PORT=9042
+      - CQLVERSION=3.4.7
+    entrypoint: ["cqlsh", "cassandra", "9042", "--cqlversion=3.4.7"]
+
+networks:
+  cassandra-network:
+    driver: bridge
+
+volumes:
+  cassandra_data:
+

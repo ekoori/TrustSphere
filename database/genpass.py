@@ -1,13 +1,12 @@
 from cassandra.cluster import Cluster
 import csv
 from werkzeug.security import generate_password_hash
-
+import uuid
 
 users = [
     {'name': 'Joe Rogan', 'user_id': 'fe878ccf-aba7-4b16-8b5f-847f7db6e0ad'},
     {'name': 'Neil deGrasse Tyson', 'user_id': '39eab94a-b6f7-40e1-81d7-9be14b7c867d'},
     {'name': 'Quentin Tarantino', 'user_id': '98806cda-663d-4b4c-8d72-7a1d28ed4f58'},
-    {'name': 'Ana Krbavcic', 'user_id': '2ff0cd86-9026-4734-b3fe-157ae5fa1a60'},
     {'name': 'Jordan Peterson', 'user_id': '45d4a39e-a9a3-4c27-955a-6d056324c6fd'},
     {'name': 'Jeff Bezos', 'user_id': '6c1b8973-5ebd-4407-8817-02945bcfa561'},
     {'name': 'J.K. Rowling', 'user_id': '8bdce8ab-41e9-49db-a3f5-5cbacd5f60d0'},
@@ -20,7 +19,6 @@ users = [
     {'name': 'James Cameron', 'user_id': 'a0a79e14-2ea9-4924-a992-6d5e1d7ad0ab'},
     {'name': 'Pope Francis', 'user_id': '1be6b6df-d5f3-4d82-9e15-c3a8c78607dd'},
     {'name': 'Bill Gates', 'user_id': '86eb2b6c-1771-4533-9bd8-fca4f83fe61a'},
-    {'name': 'Igor Krbavcic', 'user_id': '4492f2b4-b91c-4831-abfd-1ad211497cff'},
     {'name': 'Marie Kondo', 'user_id': '9c89c702-6c61-49c8-9f0c-47b8e4e84e4b'},
     {'name': 'Richard Branson', 'user_id': '2d10e93b-163f-40f0-9b77-1de15e2b5d0c'},
     {'name': 'Barack Obama', 'user_id': '642932c8-63fe-4f06-91c9-0e7e6d8b0756'},
@@ -28,49 +26,32 @@ users = [
     {'name': 'Oprah Winfrey', 'user_id': '20bb3797-b82c-4a7b-b3e5-c726ce2a19cd'}
 ]
 
-
-# Generate the hashed passwords using the werkzeug library
+# Generate hashed passwords
 for user in users:
     first_name = user['name'].split()[0]
     user['password'] = generate_password_hash(first_name)
 
-# Extracting the hashed passwords for the users
-user_passwords = {user['name']: user['password'] for user in users}
-print(users)
-
-
-
-# Specify the file path
+# Save user details to CSV
 csv_file_path = './user_passwords.csv'
-
-# Open the file in write mode
 with open(csv_file_path, 'w', newline='') as csv_file:
-    # Create a CSV writer
     writer = csv.DictWriter(csv_file, fieldnames=users[0].keys())
-    
-    # Write the header
     writer.writeheader()
+    writer.writerows(users)
 
-    # Write the rows
-    for row in users:
-        writer.writerow(row)
-
-
-
+# Connect to Cassandra
+cluster = Cluster(['172.18.0.2'])  # Replace with your Cassandra host
+cassandra_session = cluster.connect('trustsphere')
 
 
 
-cluster = Cluster(['143.42.34.42'])  # provide your Cassandra host here
-cassandra_session = cluster.connect()
-
-with open('./user_passwords.csv', 'r') as data:  # replace with your csv file path
+# Upsert user data into Cassandra
+with open('./user_passwords.csv', 'r') as data:
     reader = csv.DictReader(data)
     for row in reader:
         cassandra_session.execute(
             """
-            UPDATE trustsphere.users
-            SET password = %s  # replace with your column name
-            WHERE user_id = %s
+            INSERT INTO user_credentials (user_id, email, password)
+            VALUES (%s, %s, %s)
             """,
-            (row['password'], row['user_id'])
+            (uuid.UUID(row['user_id']), row['name'], row['password'])
         )
