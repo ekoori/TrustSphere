@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize the custom session interface globally if required
 cassandra_session_interface = CassandraSessionInterface(
-    cluster_nodes=['172.18.0.2'], 
+    cluster_nodes=['172.236.62.11'], 
     keyspace='trustsphere', 
     session_lifetime=timedelta(hours=24)
 )

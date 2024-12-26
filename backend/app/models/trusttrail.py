@@ -27,7 +27,7 @@ from uuid import UUID
 
 #cluster = Cluster(['143.42.34.42'])  # provide your Cassandra host here
 #cassandra_session = cluster.connect()
-connection.setup(['172.18.0.2'],'trustsphere')
+connection.setup(['172.236.62.11'],'trustsphere')
 
 
 class Likes(Model):

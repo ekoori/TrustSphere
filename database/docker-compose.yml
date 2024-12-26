@@ -12,28 +12,42 @@ services:
     volumes:
       - cassandra_data:/var/lib/cassandra  # Persistent data storage
       - ./cassandra.yaml:/etc/cassandra/cassandra.yaml  # Custom configuration
+      - ./schema.cql:/scripts/schema.cql  # Schema file
+      - ./import_dummy_data.sh:/scripts/import_dummy_data.sh
+      - ./dummy_data:/dummy_data
+      - cassandra_flags:/scripts  # Persistent volume for the flag file
     environment:
-      - CASSANDRA_CLUSTER_NAME=DevCluster
+      - CASSANDRA_CLUSTER_NAME=TrustSphere
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES;' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: always  # Automatically restart on system reboot or failure
 
   schema-setup:
-    image: nuvo/docker-cqlsh
+    image: cassandra:latest
     container_name: cassandra-schema
     depends_on:
-      - cassandra
+      cassandra:
+        condition: service_healthy
     networks:
       - cassandra-network
     volumes:
-      - ./schema.cql:/scripts/data.cql  # Schema file
+      - ./schema.cql:/scripts/schema.cql  # Mount schema file for use
+      - ./dummy_data:/dummy_data  # Directory with CSV files
+      - ./import_dummy_data.sh:/scripts/import_dummy_data.sh  # Import script
+      - cassandra_flags:/scripts  # Persistent volume for the flag file
     environment:
       - CQLSH_HOST=cassandra
       - CQLSH_PORT=9042
       - CQLVERSION=3.4.7
-    entrypoint: ["cqlsh", "--cqlversion=3.4.7", "-f", "/scripts/data.cql"]
+    entrypoint: ["/bin/bash", "-c", "/scripts/import_dummy_data.sh"]
     restart: "no"  # Runs once to apply the schema
 
   cqlsh:
-    image: nuvo/docker-cqlsh
+    image: cassandra:latest
     container_name: cassandra-cli
     networks:
       - cassandra-network
@@ -49,4 +63,7 @@ networks:
 
 volumes:
   cassandra_data:
+  cassandra_flags:
+
+
 

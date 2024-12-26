@@ -1,0 +1,79 @@
+{
+	"version": "2.0.0",
+	"configurations": [
+		{
+		  "name": "Python: Flask",
+		  "type": "python",
+		  "request": "launch",
+		  "program": "${workspaceFolder}/backend/app/main.py",
+		  "env": {
+			"PYTHONPATH": "${workspaceFolder}/backend"
+		  },
+		  "args": [],
+		  "jinja": true,
+		  "justMyCode": true
+		}
+	  ],
+	"tasks": [
+	  {
+		"label": "Frontend",
+		"type": "shell",
+		"command": "npm",
+		"args": ["start"],
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		},
+		"options": {
+		  "cwd": "${workspaceFolder}/frontend/src"
+		}
+	  },
+	  {
+		"label": "Backend",
+		"type": "shell",
+		"command": "PYTHONPATH=${workspaceFolder}/backend python3 -m app.main",
+		"options": {
+		  "cwd": "${workspaceFolder}/backend"
+		},
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		}
+	  },
+	  {
+		"label": "Cassandra",
+		"type": "shell",
+		"command": "cqlsh",
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		}
+	  },
+	  {
+		"label": "Input",
+		"type": "shell",
+		"command": "bash",
+		"presentation": {
+		  "reveal": "always",
+		  "panel": "dedicated"
+		},
+		"group": {
+		  "kind": "build",
+		  "isDefault": true
+		}
+	  }
+	]
+  }
+  

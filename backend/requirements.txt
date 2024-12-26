@@ -2,3 +2,5 @@ flask
 flask-cors
 flask-login
 flask-session
+cassandra-driver
+cqlsh

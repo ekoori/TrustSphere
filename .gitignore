@@ -58,7 +58,7 @@ __pycache__
 .ipynb_checkpoints
 
 # VS Code settings and extensions
-.vscode/
+#.vscode/
 
 # OS generated files
 .DS_Store
