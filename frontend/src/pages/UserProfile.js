@@ -28,7 +28,25 @@ function UserProfile() {
     }
   }, [sessionId]);
   
- 
+  const handleUpdateProfile = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updatedData = {
+      name: formData.get('name'),
+      location: formData.get('location'),
+      profile_picture: formData.get('profile_picture')
+    };
+
+    api.post('/api/updateuser', updatedData).then(response => {
+      if (response.status === 200) {
+        setUserData(response.data);
+      } else {
+        console.error('Failed to update profile');
+      }
+    }).catch(error => {
+      console.error('Error updating profile:', error);
+    });
+  };
 
   return (
     <div className='container'>
@@ -44,6 +62,21 @@ function UserProfile() {
               <li>Location: {[userData.location]}</li>
               <li>Session ID: {sessionId}</li>
             </ul>
+            <form onSubmit={handleUpdateProfile}>
+              <label>
+                Name:
+                <input type="text" name="name" defaultValue={userData.name} />
+              </label>
+              <label>
+                Location:
+                <input type="text" name="location" defaultValue={userData.location} />
+              </label>
+              <label>
+                Profile Picture:
+                <input type="text" name="profile_picture" defaultValue={userData.profile_picture} />
+              </label>
+              <button type="submit">Update Profile</button>
+            </form>
           </div>
         )}
       </div>
@@ -51,4 +84,5 @@ function UserProfile() {
     </div>
   );
 };
+
 export default UserProfile;

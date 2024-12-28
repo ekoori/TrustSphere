@@ -18,13 +18,20 @@ def get_user(user_id=None):
         return response, 200
 
     try:
-        logger.info(f"Fetching user data for user_id: {user_id}")
+        logger.info(f"Fetching basic user data for user_id: {user_id}")
+        
+        # Ensure user_id is a string
+        user_id = str(user_id)
         
         # Get user data
         user = User.get(user_id)
         if user:
-            user_data = user.to_dict()
-            logger.info(f"Successfully retrieved user data for user_id: {user_id}")
+            user_data = {
+                'user_id': str(user.user_id),
+                'email': user.email,
+                'name': user.name
+            }
+            logger.info(f"Successfully retrieved basic user data for user_id: {user_id}")
             
             response = jsonify(user_data)
             return response, 200
@@ -39,13 +46,51 @@ def get_user(user_id=None):
         return response, 500
 
 @validate_session
+def get_profile(user_id=None):
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        return response, 200
+
+    try:
+        logger.info(f"Fetching user profile data for user_id: {user_id}")
+        
+        # Ensure user_id is a string
+        user_id = str(user_id)
+        
+        # Get user profile data
+        user = User.get(user_id)
+        if user:
+            user_data = user.to_dict()
+            logger.info(f"Successfully retrieved user profile data for user_id: {user_id}")
+            
+            response = jsonify(user_data)
+            return response, 200
+        else:
+            logger.error(f'User not found with user_id: {user_id}')
+            response = jsonify({'message': 'User not found'})
+            return response, 404
+
+    except Exception as e:
+        logger.error(f"Error in get_profile: {str(e)}")
+        response = jsonify({'message': 'Internal server error'})
+        return response, 500
+
+@validate_session
 def update_user(user_id=None):
     if request.method == 'OPTIONS':
         response = app.make_default_options_response()
         return response, 200
 
     try:
-        data = request.get_json()
+        if 'multipart/form-data' in request.content_type:
+            data = request.form
+            profile_picture = request.files.get('profile_picture')
+            if profile_picture:
+                profile_picture = profile_picture.read()
+        else:
+            data = request.get_json()
+            profile_picture = data.get('profile_picture')
+
         logger.debug(f"Received update data: {data}")
         if not data:
             logger.error("No data provided for update")
@@ -54,15 +99,17 @@ def update_user(user_id=None):
 
         logger.info(f"Updating user profile for user_id: {user_id}")
         
+        # Ensure user_id is a string
+        user_id = str(user_id)
+        
         # Extract fields from the request data
         name = data.get('name')
         surname = data.get('surname')
         location = data.get('location')
-        profile_picture = data.get('profile_picture')
 
         # Update user profile
         updated_user = User.update(
-            str(user_id),
+            user_id,
             name=name,
             surname=surname,
             location=location,

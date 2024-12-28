@@ -34,6 +34,7 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(DUMMY_PROFILE);
+  const [imageFile, setImageFile] = useState(null);
 
   const { isLoggedIn } = useLogin();
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const ProfilePage = () => {
         setError(null);
         console.log('Fetching user data...');
         
-        const response = await api.get('/api/user', {
+        const response = await api.get('/api/user/profile', {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ const ProfilePage = () => {
             name: response.data.name || prevData.name,
             email: response.data.email || prevData.email,
             location: response.data.location || prevData.location,
-            image: response.data.profile_picture || prevData.image,
+            image: response.data.profile_picture ? `data:image/jpeg;base64,${response.data.profile_picture}` : prevData.image,
             // Keep dummy data for these if not provided by the API
             values: response.data.values || prevData.values,
             spheres: response.data.spheres || prevData.spheres,
@@ -106,6 +107,7 @@ const ProfilePage = () => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      setImageFile(file);
       setProfileData(prev => ({
         ...prev,
         image: URL.createObjectURL(file)
@@ -116,24 +118,25 @@ const ProfilePage = () => {
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/api/updateuser', 
-        {
-          name: profileData.name,
-          location: profileData.location,
-          profile_picture: profileData.image
-        },
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-          }
+      const formData = new FormData();
+      formData.append('name', profileData.name);
+      formData.append('location', profileData.location);
+      if (imageFile) {
+        formData.append('profile_picture', imageFile);
+      }
+
+      const response = await api.post('/api/updateuser', formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
         }
-      );
+      });
 
       if (response.status === 200) {
         setProfileData(prev => ({
           ...prev,
           ...response.data,
+          image: response.data.profile_picture ? `data:image/jpeg;base64,${response.data.profile_picture}` : prev.image,
           // Preserve the data that might not be returned by the API
           values: prev.values,
           spheres: prev.spheres,

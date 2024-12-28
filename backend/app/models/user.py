@@ -17,11 +17,8 @@
 #    [+] get_existing_session(cls, user_id): Retrieves an existing session ID for a user if one exists and is active.
 #    [+] check_session(cls, session_id): Verifies if a session with the given session_id is still active.
 #    [+] logout(cls, session_id): Logs out a user by deleting their session from Cassandra.
-#    [+] get(cls, user_id): Retrieves a user's details from Cassandra using their user_id.
-#    [+] update(cls, user_id, name=None, surname=None, location=None, profile_picture=None): Updates a user's profile details in the database.
-
-
-
+#    [+] get(user_id): Fetches the user with the given user_id from the database.
+#    [+] update(user_id, name, surname, location, profile_picture): Updates the user profile data in the database.
 
 from cassandra.cluster import Cluster
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,6 +26,7 @@ from flask_login import UserMixin
 import uuid
 import logging
 from datetime import datetime, timedelta
+import base64
 
 # Set up Cassandra session
 cluster = Cluster(['172.236.62.11'])
@@ -39,18 +37,26 @@ class User(UserMixin):
         self.name = name
         self.email = email
         self.user_id = user_id
+        self.surname = None
+        self.location = None
+        self.profile_picture = None
         self.session_id = session_id
 
-    def get_id(self):
-        return str(self.user_id)
 
     def to_dict(self):
         return {
             'name': self.name,
             'user_id': str(self.user_id),
             'email': self.email,
-            'session_id': str(self.session_id) if self.session_id else None
+            'session_id': str(self.session_id) if self.session_id else None,
+            'surname': self.surname,
+            'location': self.location,
+            'profile_picture': base64.b64encode(self.profile_picture).decode('utf-8') if self.profile_picture else None
         }
+
+
+    def get_id(self):
+        return str(self.user_id)
 
     @classmethod
     def register(cls, data):
@@ -154,7 +160,9 @@ class User(UserMixin):
 
     @classmethod
     def get(cls, user_id):
-        if not isinstance(user_id, uuid.UUID):
+        try:
+            user_id = uuid.UUID(user_id)
+        except ValueError as e:
             logging.error(f'Invalid user_id type: {type(user_id)}, value: {user_id}')
             return None
 
@@ -164,7 +172,11 @@ class User(UserMixin):
             rows = cassandra_session.execute(query, (user_id,))
 
             for row in rows:
-                return cls(name=row.name, email=row.email, user_id=row.user_id)
+                user = cls(name=row.name, email=row.email, user_id=row.user_id)
+                user.surname = row.surname
+                user.location = row.location
+                user.profile_picture = row.profile_picture
+                return user
 
             logging.error(f'User not found with user_id: {user_id}')
             return None
@@ -176,7 +188,15 @@ class User(UserMixin):
     def update(cls, user_id, name=None, surname=None, location=None, profile_picture=None):
         logging.info(f'Updating user with user_id: {user_id}')
         
-        # Construct the update query dynamically based on which fields are provided
+        # Ensure user_id is a UUID object
+        if isinstance(user_id, str):
+            try:
+                user_id = uuid.UUID(user_id)
+            except ValueError:
+                logging.error(f'Invalid user_id: {user_id}')
+                return None
+        
+        # Construct the update query dynamically based on provided fields
         update_fields = []
         update_values = []
         
@@ -190,22 +210,22 @@ class User(UserMixin):
             update_fields.append("location = %s")
             update_values.append(location)
         if profile_picture:
-            # Convert profile picture to blob
-            profile_picture_blob = profile_picture.encode('utf-8')
             update_fields.append("profile_picture = %s")
-            update_values.append(profile_picture_blob)
+            update_values.append(profile_picture)
         
         if not update_fields:
             logging.error('No fields provided to update')
             return None
 
-        update_values.append(uuid.UUID(user_id))
+        # Append user_id for WHERE clause
+        update_values.append(user_id)
 
         query = f"UPDATE users SET {', '.join(update_fields)} WHERE user_id = %s"
         
         try:
             cassandra_session.execute(query, tuple(update_values))
-            return cls.get(user_id)  # Return the updated user object
+            # Pass user_id as string to cls.get
+            return cls.get(str(user_id))
         except Exception as e:
             logging.error(f'Failed to update user profile: {e}')
             return None

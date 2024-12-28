@@ -21,7 +21,7 @@ from datetime import timedelta
 
 from app.routes.cassandra import CassandraSessionInterface
 from app.routes.login import login, logout, check_session, load_user
-from app.routes.profile import get_user, update_user
+from app.routes.profile import get_user, get_profile, update_user
 from app.routes.registration import register
 from app.routes.trusttrail import get_trusttrail, add_transaction
 from app.models.user import User
@@ -109,6 +109,7 @@ app.add_url_rule('/api/login', view_func=login, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/logout', view_func=logout, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/check_session', view_func=check_session, methods=['POST', 'GET', 'OPTIONS'])
 app.add_url_rule('/api/user', view_func=get_user, methods=['GET', 'OPTIONS'])
+app.add_url_rule('/api/user/profile', view_func=get_profile, methods=['GET', 'OPTIONS'])
 app.add_url_rule('/api/updateuser', view_func=update_user, methods=['POST', 'OPTIONS'])
 app.add_url_rule('/api/register', view_func=register, methods=['POST'])
 app.add_url_rule('/api/trusttrail', view_func=get_trusttrail, methods=['GET', 'POST', 'OPTIONS'])
