@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Spheres.css';
 import NewSphereForm from '../components/NewSphereForm';
 import SphereCard from '../components/SphereCard';
+import api from '../api';
 
 const Spheres = () => {
-  const [spheres, setSpheres] = useState([
+  const [spheres, setSpheres] = useState([]);
+  const navigate = useNavigate();
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
+
+  const handleCreateSphere = (newSphere) => {
+    const createdSphere = { ...newSphere, id: `sphere-${Date.now()}`, unions: [], participants: [], projects: [], values: [] };
+    setSpheres([...spheres, createdSphere]);
+    toggleFormVisibility();
+    navigate(`/sphere-management/${createdSphere.id}`);
+  };
+
+  const dummySpheres = [
     {
       id: 'sphere-ai',
       name: 'AI Development Sphere',
@@ -23,18 +41,33 @@ const Spheres = () => {
       projects: ['Solar Panel Initiative', 'Wind Turbine Project'],
       values: ['sustainability', 'renewable energy', 'environment']
     }
-  ]);
+  ];
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const fetchSpheres = async () => {
+    try {
+      const response = await api.get('/api/spheres', {
+        withCredentials: true,
+      });
 
-  const toggleFormVisibility = () => {
-    setIsFormVisible(!isFormVisible);
+      if (response.data) {
+        const fetchedSpheres = response.data.map((sphere) => ({
+          ...sphere,
+          id: sphere.sphere_id,
+          unions: sphere.unions ? sphere.unions.slice(0, 5) : [],
+          participants: sphere.participants ? sphere.participants.slice(0, 5) : [],
+          projects: sphere.projects ? sphere.projects.slice(0, 5) : [],
+          values: sphere.values ? sphere.values.slice(0, 5) : [],
+        }));
+        setSpheres([...dummySpheres, ...fetchedSpheres]);
+      }
+    } catch (error) {
+      console.error('Error fetching spheres:', error);
+    }
   };
 
-  const handleCreateSphere = (newSphere) => {
-    setSpheres([...spheres, { ...newSphere, id: `sphere-${Date.now()}`, unions: [], participants: [], projects: [], values: [] }]);
-    toggleFormVisibility();
-  };
+  useEffect(() => {
+    fetchSpheres();
+  }, []);
 
   return (
     <div className="container">

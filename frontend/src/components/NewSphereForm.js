@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Spheres.css';
-import SphereBanner from './SphereBanner'; // Assuming SphereBanner is in the same directory
+import SphereBanner from './SphereBanner';
+import api from '../api';
 
 const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
   const [name, setName] = useState('');
@@ -9,7 +10,6 @@ const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
   const [location, setLocation] = useState('');
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
-
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -23,9 +23,31 @@ const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onCreateSphere({ name, description, valueGraph, location, image });
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('value_graph', valueGraph);
+    formData.append('location', location);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    try {
+      const response = await api.post('/api/spheres', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+
+      if (response.status === 201) {
+        onCreateSphere(response.data);
+      }
+    } catch (error) {
+      console.error('Error creating sphere:', error);
+    }
   };
 
   if (!isVisible) return null;
@@ -34,7 +56,7 @@ const NewSphereForm = ({ isVisible, onCreateSphere, onCancel }) => {
     <div id="sphere-form" className="transaction">
       <h3>Create a New Sphere</h3>
       <form onSubmit={handleSubmit}>
-      <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
+        <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
 
         <label htmlFor="sphere-name">Sphere Name:</label>
         <input type="text" id="sphere-name" name="sphere-name" value={name} onChange={(e) => setName(e.target.value)} required />

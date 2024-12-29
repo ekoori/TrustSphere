@@ -25,6 +25,7 @@ from app.routes.profile import get_user, get_profile, update_user
 from app.routes.registration import register
 from app.routes.trusttrail import get_trusttrail, add_transaction
 from app.models.user import User
+from app.routes.spheres import create_sphere, get_spheres
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -114,6 +115,8 @@ app.add_url_rule('/api/updateuser', view_func=update_user, methods=['POST', 'OPT
 app.add_url_rule('/api/register', view_func=register, methods=['POST'])
 app.add_url_rule('/api/trusttrail', view_func=get_trusttrail, methods=['GET', 'POST', 'OPTIONS'])
 app.add_url_rule('/api/trusttrail/add_transaction', view_func=add_transaction, methods=['POST', 'OPTIONS'])
+app.add_url_rule('/api/spheres', view_func=create_sphere, methods=['POST', 'OPTIONS'])
+app.add_url_rule('/api/spheres', view_func=get_spheres, methods=['GET', 'OPTIONS'])
 
 @app.errorhandler(500)
 def internal_error(error):

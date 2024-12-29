@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import '../styles/SphereManagement.css';
 import SphereBanner from '../components/SphereBanner';
+import api from '../api';
 
 const SphereManagement = () => {
-  const [sphere, setSphere] = useState({
+  const { sphereId } = useParams();
+  const [sphere, setSphere] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+
+  const dummySphere = {
+    id: 'sphere-ai',
     name: 'AI Development Sphere',
     location: 'Global',
     status: 'Active',
@@ -14,23 +21,35 @@ const SphereManagement = () => {
     projects: ['AI Ethics Initiative', 'OpenAI Collaboration'],
     values: ['innovation', 'technology', 'collaboration'],
     bannerImage: 'static/A_banner_image_for_an_AI_Development_Sphere_in_a_s.png'
-  });
-  const [previewUrl, setPreviewUrl] = useState(sphere.bannerImage);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setSphere((prevSphere) => ({
-        ...prevSphere,
-        bannerImage: file
-      }));
-    }
   };
+
+  useEffect(() => {
+    const fetchSphere = async () => {
+      try {
+        const response = await api.get(`/api/spheres/${sphereId}`, {
+          withCredentials: true,
+        });
+
+        if (response.data) {
+          setSphere(response.data);
+          setPreviewUrl(response.data.image);
+        }
+      } catch (error) {
+        console.error('Error fetching sphere:', error);
+        setSphere(dummySphere);
+        setPreviewUrl(dummySphere.bannerImage);
+      }
+    };
+
+    if (sphereId) {
+      fetchSphere();
+    } else {
+      setSphere(dummySphere);
+      setPreviewUrl(dummySphere.bannerImage);
+    }
+  }, [sphereId]);
+
+  if (!sphere) return <div>Loading...</div>;
 
   return (
     <div className="container">
@@ -43,7 +62,7 @@ const SphereManagement = () => {
       </aside>
       <main>
         <div className="sphere-section">
-          <SphereBanner previewUrl={previewUrl} onImageChange={handleImageChange} />
+          <SphereBanner previewUrl={previewUrl} onImageChange={(e) => {}} />
 
           <div className="sphere-description">
             <h3>Description</h3>
